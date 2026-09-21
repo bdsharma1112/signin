@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            margin: 0;
+            text-align: center;
+        }
+
+
+        header {
+            background: #2196F3;
+            color: white;
+            padding: 20px;
+        }
+
+
+        .signup-box {
+
+            background: white;
+
+            width: 400px;
+
+            max-width: 90%;
+
+            margin: 30px auto;
+
+            padding: 25px;
+
+            border-radius: 10px;
+
+            box-shadow: 0 0 10px #aaa;
+        }
+
+
+        input,
+        textarea {
+
+            width: 95%;
+
+            padding: 10px;
+
+            margin: 8px 0;
+
+            border: 1px solid #999;
+
+            border-radius: 5px;
+
+            box-sizing: border-box;
+
+            font-size: 15px;
+        }
+
+
+        textarea {
+
+            height: 80px;
+
+            resize: vertical;
+        }
+
+
+        button {
+
+            padding: 12px 25px;
+
+            margin: 10px 5px;
+
+            border: none;
+
+            border-radius: 5px;
+
+            cursor: pointer;
+
+            font-size: 15px;
+        }
+
+
+        .create-btn {
+
+            background: #4CAF50;
+
+            color: white;
+        }
+
+
+        .back-btn {
+
+            background: red;
+
+            color: white;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    
+    <div class="signup-box">
+
+        <h2>SIGN UP</h2>
+
+
+        <input
+            type="text"
+            id="fullName"
+            placeholder="Full Name">
+
+
+        <input
+            type="text"
+            id="fatherName"
+            placeholder="Father's Name">
+
+
+        <input
+            type="tel"
+            id="mobile"
+            placeholder="Mobile No.">
+
+
+        <input
+            type="email"
+            id="email"
+            placeholder="Email ID">
+
+
+        <textarea
+            id="address"
+            placeholder="Address"></textarea>
+
+
+        <input
+            type="text"
+            id="signupUserId"
+            placeholder="Create User ID">
+
+
+        <input
+            type="password"
+            id="signupPassword"
+            placeholder="Create Password">
+
+
+        <br>
+
+
+        <button
+            type="button"
+            class="create-btn"
+            onclick="createAccount()">
+
+            CREATE ACCOUNT
+
+        </button>
+
+
+        <button
+            type="button"
+            class="back-btn"
+            onclick="window.location.href='signin.html'">
+
+            BACK TO LOGIN
+
+        </button>
+
+
+    </div>
+
+
+
+    <script>
+
+
+        const SCRIPT_URL =
+        "https://script.google.com/macros/s/AKfycbxXlGnTpTAKkSv_cHnH7n1CcQpnns_tXGglecg6kP6mAiHguAqCFrxLJbfCo0HHKwxAMg/exec";
+
+
+
+        function createAccount() {
+
+
+            var fullName =
+                document.getElementById("fullName").value.trim();
+
+
+            var fatherName =
+                document.getElementById("fatherName").value.trim();
+
+
+            var mobile =
+                document.getElementById("mobile").value.trim();
+
+
+            var email =
+                document.getElementById("email").value.trim();
+
+
+            var address =
+                document.getElementById("address").value.trim();
+
+
+            var userId =
+                document.getElementById("signupUserId").value.trim();
+
+
+            var password =
+                document.getElementById("signupPassword").value.trim();
+
+
+
+            if (
+                fullName === "" ||
+                fatherName === "" ||
+                mobile === "" ||
+                email === "" ||
+                address === "" ||
+                userId === "" ||
+                password === ""
+            ) {
+
+                alert("Please fill all fields");
+
+                return;
+            }
+
+
+
+            var url =
+                SCRIPT_URL +
+                "?action=signup" +
+                "&fullName=" +
+                encodeURIComponent(fullName) +
+                "&fatherName=" +
+                encodeURIComponent(fatherName) +
+                "&mobile=" +
+                encodeURIComponent(mobile) +
+                "&email=" +
+                encodeURIComponent(email) +
+                "&address=" +
+                encodeURIComponent(address) +
+                "&userId=" +
+                encodeURIComponent(userId) +
+                "&password=" +
+                encodeURIComponent(password);
+
+
+
+            fetch(url)
+
+                .then(function(response) {
+
+                    return response.json();
+
+                })
+
+
+                .then(function(data) {
+
+
+                    if (data.status === "success") {
+
+
+                        alert(
+                            "Account Created Successfully"
+                        );
+
+
+                        window.location.href =
+                            "signin.html";
+
+
+                    } else {
+
+
+                        alert(data.message);
+
+                    }
+
+                })
+
+
+                .catch(function(error) {
+
+
+                    console.error(error);
+
+
+                    alert("Connection Error");
+
+
+                });
+
+        }
+
+    </script>
+
+
+</body>
+
+</html>
+
