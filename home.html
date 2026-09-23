@@ -2,12 +2,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-signup.html
-
-html
-<!DOCTYPE html>
-<html lang="en">
-
 <head>
 
     <meta charset="UTF-8">
@@ -100,7 +94,7 @@ html
         </h1>
 
         <p>
-            Create New Account
+            Reports
         </p>
 
     </header>
@@ -112,88 +106,14 @@ html
         <h2>Sign Up</h2>
 
 
-        <label for="fullName">
-            Full Name
-        </label>
-
-        <input
-            type="text"
-            id="fullName"
-            placeholder="Enter Full Name"
-        >
-
-
-        <label for="fatherName">
-            Father's Name
-        </label>
-
-        <input
-            type="text"
-            id="fatherName"
-            placeholder="Enter Father's Name"
-        >
-
-
-        <label for="mobile">
-            Mobile No
-        </label>
-
-        <input
-            type="tel"
-            id="mobile"
-            placeholder="Enter Mobile No"
-        >
-
-
-        <label for="email">
-            Email ID
-        </label>
-
-        <input
-            type="email"
-            id="email"
-            placeholder="Enter Email ID"
-        >
-
-
-        <label for="address">
-            Address
-        </label>
-
-        <input
-            type="text"
-            id="address"
-            placeholder="Enter Full Address"
-        >
-
-
-        <label for="userId">
-            New User ID
-        </label>
-
-        <input
-            type="text"
-            id="userId"
-            placeholder="Enter New User ID"
-        >
-
-
-        <label for="password">
-            Password
-        </label>
-
-        <input
-            type="password"
-            id="password"
-            placeholder="Enter Password"
-        >
-
-
+        
         <button
-            type="button"
-            onclick="signUp()">
-
-            CREATE ACCOUNT
+            type="report"
+            class="back"
+            onclick="window.location.href='report.html'">
+    
+           
+           VIEW REPORT
 
         </button>
 
@@ -204,159 +124,13 @@ html
         <button
             type="button"
             class="back"
-            onclick="window.location.href='index.html'">
+            onclick="window.location.href='home.html'">
 
             BACK TO LOGIN
 
         </button>
 
-    </div>
-
-
-
-    <script>
-
-
-        var scriptURL =
-        ""https://script.google.com/macros/s/AKfycbxoaSAp8cUA89G3Y4lspGr67jUAzU00EEZH2IF5ZJYyoiYUdUlEH5Fh0SBIGJi5bw6gSw/exec";
-
-
-
-        function signUp() {
-
-
-            var fullName =
-                document.getElementById("fullName")
-                .value.trim();
-
-
-            var fatherName =
-                document.getElementById("fatherName")
-                .value.trim();
-
-
-            var mobile =
-                document.getElementById("mobile")
-                .value.trim();
-
-
-            var email =
-                document.getElementById("email")
-                .value.trim();
-
-
-            var address =
-                document.getElementById("address")
-                .value.trim();
-
-
-            var userId =
-                document.getElementById("userId")
-                .value.trim();
-
-
-            var password =
-                document.getElementById("password")
-                .value.trim();
-
-
-
-            if (
-                fullName === "" ||
-                fatherName === "" ||
-                mobile === "" ||
-                email === "" ||
-                address === "" ||
-                userId === "" ||
-                password === ""
-            ) {
-
-                alert("Please fill all fields");
-
-                return;
-            }
-
-
-
-            var url =
-                scriptURL +
-                "?action=signup" +
-
-                "&fullName=" +
-                encodeURIComponent(fullName) +
-
-                "&fatherName=" +
-                encodeURIComponent(fatherName) +
-
-                "&mobile=" +
-                encodeURIComponent(mobile) +
-
-                "&email=" +
-                encodeURIComponent(email) +
-
-                "&address=" +
-                encodeURIComponent(address) +
-
-                "&userId=" +
-                encodeURIComponent(userId) +
-
-                "&password=" +
-                encodeURIComponent(password);
-
-
-
-            fetch(url)
-
-            .then(function(response) {
-
-                return response.json();
-
-            })
-
-
-            .then(function(result) {
-
-
-                if (result.status === "success") {
-
-
-                    alert(
-                        "Account Created Successfully"
-                    );
-
-
-                    // वापस Login page
-
-                    window.location.href =
-                        "index.html";
-
-
-                }
-
-                else {
-
-                    alert(result.message);
-
-                }
-
-            })
-
-
-            .catch(function(error) {
-
-                console.log(error);
-
-                alert(
-                    "Error connecting to Google Sheet"
-                );
-
-            });
-
-        }
-
-    </script>
-
-
+    
 </body>
 
 </html>
