@@ -8,6 +8,8 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
+    <title>Sign Up</title>
+
 
     <style>
 
@@ -16,13 +18,6 @@
             background: #f2f2f2;
             margin: 0;
             text-align: center;
-        }
-
-
-        header {
-            background: #2196F3;
-            color: white;
-            padding: 20px;
         }
 
 
@@ -95,11 +90,80 @@
         }
 
 
+        .create-btn:disabled {
+
+            background: #999;
+
+            cursor: not-allowed;
+        }
+
+
         .back-btn {
 
             background: red;
 
             color: white;
+        }
+
+
+        /* =========================
+           DELAY / LOADING ANIMATION
+           ========================= */
+
+        #delayAnimation {
+
+            display: none;
+
+            position: fixed;
+
+            top: 0;
+            left: 0;
+
+            width: 100%;
+            height: 100%;
+
+            background: rgba(255,255,255,0.95);
+
+            z-index: 9999;
+
+            justify-content: center;
+
+            align-items: center;
+
+            flex-direction: column;
+        }
+
+
+        .loader {
+
+            width: 50px;
+
+            height: 50px;
+
+            border: 5px solid #ddd;
+
+            border-top: 5px solid #2196F3;
+
+            border-radius: 50%;
+
+            animation: spin 1s linear infinite;
+        }
+
+
+        @keyframes spin {
+
+            0% {
+
+                transform: rotate(0deg);
+
+            }
+
+            100% {
+
+                transform: rotate(360deg);
+
+            }
+
         }
 
     </style>
@@ -110,7 +174,10 @@
 <body>
 
 
-    
+    <!-- =========================
+         SIGN UP FORM
+         ========================= -->
+
     <div class="signup-box">
 
         <h2>SIGN UP</h2>
@@ -179,6 +246,21 @@
 
         </button>
 
+    </div>
+
+
+
+    <!-- =========================
+         DELAY ANIMATION
+         ========================= -->
+
+    <div id="delayAnimation">
+
+        <div class="loader"></div>
+
+        <h3>Please Wait...</h3>
+
+        <p>Submitting your information...</p>
 
     </div>
 
@@ -187,13 +269,23 @@
     <script>
 
 
+        // =========================
+        // GOOGLE APPS SCRIPT URL
+        // =========================
+
         const SCRIPT_URL =
         "https://script.google.com/macros/s/AKfycbxXlGnTpTAKkSv_cHnH7n1CcQpnns_tXGglecg6kP6mAiHguAqCFrxLJbfCo0HHKwxAMg/exec";
 
 
 
+        // =========================
+        // CREATE ACCOUNT
+        // =========================
+
         function createAccount() {
 
+
+            // GET ALL VALUES
 
             var fullName =
                 document.getElementById("fullName").value.trim();
@@ -224,6 +316,10 @@
 
 
 
+            // =========================
+            // CHECK ALL FIELDS
+            // =========================
+
             if (
                 fullName === "" ||
                 fatherName === "" ||
@@ -240,6 +336,39 @@
             }
 
 
+
+            // =========================
+            // CREATE BUTTON
+            // =========================
+
+            var createButton =
+                document.querySelector(".create-btn");
+
+
+
+            // =========================
+            // SHOW DELAY ANIMATION
+            // =========================
+
+            document.getElementById("delayAnimation")
+                .style.display = "flex";
+
+
+
+            // =========================
+            // DISABLE BUTTON
+            // =========================
+
+            createButton.disabled = true;
+
+            createButton.innerText =
+                "Submitting...";
+
+
+
+            // =========================
+            // CREATE URL
+            // =========================
 
             var url =
                 SCRIPT_URL +
@@ -261,6 +390,10 @@
 
 
 
+            // =========================
+            // SEND DATA
+            // =========================
+
             fetch(url)
 
                 .then(function(response) {
@@ -273,19 +406,57 @@
                 .then(function(data) {
 
 
+                    // =========================
+                    // SUCCESS
+                    // =========================
+
                     if (data.status === "success") {
 
+
+                        // HIDE ANIMATION
+
+                        document.getElementById(
+                            "delayAnimation"
+                        ).style.display = "none";
+
+
+                        // SUCCESS MESSAGE
 
                         alert(
                             "Account Created Successfully"
                         );
 
 
+                        // GO TO LOGIN PAGE
+
                         window.location.href =
                             "index.html";
 
+                    }
 
-                    } else {
+
+                    // =========================
+                    // ERROR
+                    // =========================
+
+                    else {
+
+
+                        // HIDE ANIMATION
+
+                        document.getElementById(
+                            "delayAnimation"
+                        ).style.display = "none";
+
+
+                        // ENABLE BUTTON
+
+                        createButton.disabled =
+                            false;
+
+
+                        createButton.innerText =
+                            "CREATE ACCOUNT";
 
 
                         alert(data.message);
@@ -295,14 +466,36 @@
                 })
 
 
+                // =========================
+                // CONNECTION ERROR
+                // =========================
+
                 .catch(function(error) {
 
 
-                    console.error(error);
+                    // HIDE ANIMATION
+
+                    document.getElementById(
+                        "delayAnimation"
+                    ).style.display = "none";
 
 
-                    alert("Connection Error");
+                    // ENABLE BUTTON
 
+                    createButton.disabled =
+                        false;
+
+
+                    createButton.innerText =
+                        "CREATE ACCOUNT";
+
+
+                    console.log(error);
+
+
+                    alert(
+                        "Connection Error"
+                    );
 
                 });
 
