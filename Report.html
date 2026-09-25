@@ -10,6 +10,7 @@
 
     <title>Report View</title>
 
+
     <style>
 
         body {
@@ -18,6 +19,7 @@
             background: #f2f2f2;
         }
 
+
         header {
             background: #2196F3;
             color: white;
@@ -25,16 +27,19 @@
             text-align: center;
         }
 
+
         .container {
             padding: 20px;
             overflow-x: auto;
         }
+
 
         table {
             width: 100%;
             border-collapse: collapse;
             background: white;
         }
+
 
         th {
             background: #333;
@@ -43,41 +48,46 @@
             border: 1px solid #ddd;
         }
 
+
         td {
             padding: 10px;
             border: 1px solid #ddd;
             text-align: left;
         }
 
+
         tr:nth-child(even) {
             background: #f9f9f9;
         }
 
+
         .loading {
+            display: none;
             text-align: center;
             font-size: 20px;
             padding: 30px;
         }
 
-        .back-button {
-            margin: 20px;
+
+        .back-button,
+        .report-button {
+            margin: 20px 5px;
             padding: 10px 20px;
-            background: #2196F3;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
         }
-	   .report-button {
-            margin: 20px;
-            padding: 10px 20px;
-            background: #Orange;
-            color: Black;
-            border: 1px;
-            border-radius: 5px;
-            cursor: pointer;
+
+
+        .back-button {
+            background: #2196F3;
         }
-	
+
+
+        .report-button {
+            background: green;
+        }
 
     </style>
 
@@ -94,7 +104,7 @@
     <h2>User Registration Report</h2>
 
 </header>
- 
+
 
 <button class="back-button"
         onclick="window.location.href='home.html'">
@@ -103,14 +113,17 @@
 
 </button>
 
-	<button class="report-button"
+
+<button class="report-button"
         onclick="loadReport();">
 
     Load Report
 
 </button>
 
+
 <div class="container">
+
 
     <div id="loading"
          class="loading">
@@ -126,14 +139,20 @@
         <thead>
 
             <tr>
-				<th>User ID</th>
-				<th>Password</th>
+
+                <th>User ID</th>
+
+                <th>Password</th>
+
                 <th>Full Name</th>
+
                 <th>Father Name</th>
+
                 <th>Mobile</th>
+
                 <th>Email</th>
+
                 <th>Address</th>
-                
 
             </tr>
 
@@ -146,21 +165,36 @@
 
     </table>
 
+
 </div>
 
 
 <script>
 
 
-// Google Apps Script URL
+// =================================
+// GOOGLE APPS SCRIPT URL
+// =================================
 
 var SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbymXFDboK1M0-MzAZKVYVm1J2VupbSoyoQpwaMHcSBHBlYJ7XXWqD_EhSaeIy3_zSZgWg/exec";
+"https://script.google.com/macros/s/AKfycbwe56F7l-dlwAWYMBPUK3o9ZeVMS3oI0wvlxy2nhaIGiLOFXjQ0_5I932GNk03iJo2oqw/exec";
 
 
-// Load Report
+// =================================
+// LOAD REPORT
+// =================================
 
 function loadReport() {
+
+
+    // Show loading
+
+    document.getElementById("loading")
+        .style.display = "block";
+
+
+    document.getElementById("reportTable")
+        .style.display = "none";
 
 
     var url =
@@ -169,6 +203,7 @@ function loadReport() {
 
 
     fetch(url)
+
 
         .then(function(response) {
 
@@ -202,22 +237,36 @@ function loadReport() {
 
 
                     tr.innerHTML =
-						
-						"<td>" + row.userId + "</td>" +
-						
-						"<td>" +row.Password + "</td>" +
-						
-                        "<td>" + row.fullName + "</td>" +
 
-                        "<td>" + row.fatherName + "</td>" +
+                        "<td>" +
+                        row.userId +
+                        "</td>" +
 
-                        "<td>" + row.mobile + "</td>" +
+                        "<td>" +
+                        row.password +
+                        "</td>" +
 
-                        "<td>" + row.email + "</td>" +
+                        "<td>" +
+                        row.fullName +
+                        "</td>" +
 
-                        "<td>" + row.address + "</td>";
+                        "<td>" +
+                        row.fatherName +
+                        "</td>" +
 
-                       
+                        "<td>" +
+                        row.mobile +
+                        "</td>" +
+
+                        "<td>" +
+                        row.email +
+                        "</td>" +
+
+                        "<td>" +
+                        row.address +
+                        "</td>";
+
+
                     tbody.appendChild(tr);
 
                 });
@@ -227,8 +276,9 @@ function loadReport() {
                     .style.display = "table";
 
 
-            } else {
+            }
 
+            else {
 
                 alert(data.message);
 
@@ -246,6 +296,7 @@ function loadReport() {
 
             alert("Unable to load report");
 
+
             console.log(error);
 
         });
@@ -253,9 +304,14 @@ function loadReport() {
 }
 
 
-// Load automatically
+// =================================
+// LOAD AUTOMATICALLY
+// =================================
 
- //loadReport();
+// यदि page खुलते ही report चाहिए,
+// तो नीचे वाली line रहने दें.
+
+loadReport();
 
 
 </script>
@@ -264,3 +320,5 @@ function loadReport() {
 </body>
 
 </html>
+
+
