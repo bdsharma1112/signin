@@ -934,7 +934,88 @@
 
     </script>
 <script>
-function populateSearchTypes(searchFields) {
+    function populateSearchTypes() {
+
+    var select =
+        document.getElementById("searchType");
+
+    if (!select) {
+        console.error("searchType not found");
+        return;
+    }
+
+
+    // Clear dropdown
+    select.innerHTML = "";
+
+
+    // =================================
+    // SEARCH OPTIONS
+    // =================================
+
+    var fields = [
+
+        {
+            value: "all",
+            label: "All"
+        },
+
+        {
+            value: "fullName",
+            label: "Name"
+        },
+
+        {
+            value: "fatherName",
+            label: "Father Name"
+        },
+
+        {
+            value: "mobile",
+            label: "Mobile"
+        },
+
+        {
+            value: "email",
+            label: "Email"
+        },
+
+        {
+            value: "address",
+            label: "Address"
+        },
+
+        {
+            value: "userId",
+            label: "User ID"
+        }
+
+    ];
+
+
+    // =================================
+    // ADD OPTIONS
+    // =================================
+
+    fields.forEach(function(field) {
+
+        var option =
+            document.createElement("option");
+
+        option.value = field.value;
+
+        option.textContent = field.label;
+
+        select.appendChild(option);
+
+    });
+
+
+    console.log("Search options added");
+
+}
+
+function populateSearchTypesOld(searchFields) {
 
     var select =
         document.getElementById("searchType");
