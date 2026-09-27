@@ -335,13 +335,14 @@
     <button
         type="button"
         class="search-button"
-        onclick="searchData();">
+        onclick="searchData()">
 
         SEARCH
 
     </button>
 
 </div>
+
 
     <!-- ================================
          LOADING
@@ -387,12 +388,291 @@
         var SCRIPT_URL =
         "https://script.google.com/macros/s/AKfycbzu8RI7S1XGlk3xIYpeAz1fvhHjLaTQsMx3_8ndCobvVsdGlRFV2SMHLmyIXOMAIYtJpA/exec";
 
+        // =================================
+        // SEARCH MULTIPLE / SELECTED FIELD
+        // =================================
+
+        function searchData() {
+
+            var searchText =
+                document.getElementById("searchText")
+                .value
+                .trim();
+
+
+            var searchType =
+                document.getElementById("searchType")
+                .value;
+
+
+            // =================================
+            // EMPTY SEARCH
+            // =================================
+
+            if (searchText === "") {
+
+                alert("Please enter search value");
+
+                return;
+
+            }
+
+
+            // =================================
+            // SHOW LOADING
+            // =================================
+
+            document.getElementById("loading")
+                .style.display = "block";
+
+
+            document.getElementById("searchResult")
+                .innerHTML = "";
+
+
+            // =================================
+            // CREATE URL
+            // =================================
+
+            var url =
+                SCRIPT_URL +
+                "?action=search" +
+                "&search=" +
+                encodeURIComponent(searchText) +
+                "&searchType=" +
+                encodeURIComponent(searchType);
+
+
+            // =================================
+            // FETCH DATA
+            // =================================
+
+            fetch(url)
+
+                .then(function(response) {
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            "HTTP Error: " +
+                            response.status
+                        );
+
+                    }
+
+                    return response.json();
+
+                })
+
+
+                .then(function(data) {
+
+                    // =================================
+                    // HIDE LOADING
+                    // =================================
+
+                    document.getElementById("loading")
+                        .style.display = "none";
+
+
+                    var result =
+                        document.getElementById("searchResult");
+
+
+                    // =================================
+                    // SUCCESS
+                    // =================================
+
+                    if (
+                        data.status === "success" &&
+                        data.records &&
+                        data.records.length > 0
+                    ) {
+
+                        var html = "";
+
+
+                        // =================================
+                        // RESULT TITLE
+                        // =================================
+
+                        html +=
+                            "<h3 class='result-title'>" +
+                            "Search Result (" +
+                            data.records.length +
+                            ")" +
+                            "</h3>";
+
+
+                        // =================================
+                        // TABLE
+                        // =================================
+
+                        html += "<table>";
+
+
+                        html += "<thead>";
+
+                        html += "<tr>";
+
+                        html += "<th>User ID</th>";
+
+                        html += "<th>Full Name</th>";
+
+                        html += "<th>Father Name</th>";
+
+                        html += "<th>Mobile</th>";
+
+                        html += "<th>Email</th>";
+
+                        html += "<th>Address</th>";
+
+                        html += "</tr>";
+
+                        html += "</thead>";
+
+
+                        html += "<tbody>";
+
+
+                        // =================================
+                        // DISPLAY RECORDS
+                        // =================================
+
+                        data.records.forEach(function(row) {
+
+                            html += "<tr>";
+
+
+                            html +=
+                                "<td>" +
+                                escapeHTML(row.userId) +
+                                "</td>";
+
+
+                            html +=
+                                "<td>" +
+                                escapeHTML(row.fullName) +
+                                "</td>";
+
+
+                            html +=
+                                "<td>" +
+                                escapeHTML(row.fatherName) +
+                                "</td>";
+
+
+                            html +=
+                                "<td>" +
+                                escapeHTML(row.mobile) +
+                                "</td>";
+
+
+                            html +=
+                                "<td>" +
+                                escapeHTML(row.email) +
+                                "</td>";
+
+
+                            html +=
+                                "<td>" +
+                                escapeHTML(row.address) +
+                                "</td>";
+
+
+                            html += "</tr>";
+
+                        });
+
+
+                        html += "</tbody>";
+
+                        html += "</table>";
+
+
+                        result.innerHTML = html;
+
+                    }
+
+
+                    // =================================
+                    // NO RECORD
+                    // =================================
+
+                    else {
+
+                        result.innerHTML =
+                            "<h3>No Record Found</h3>";
+
+                    }
+
+                })
+
+
+                // =================================
+                // CONNECTION ERROR
+                // =================================
+
+                .catch(function(error) {
+
+                    document.getElementById("loading")
+                        .style.display = "none";
+
+
+                    console.log(error);
+
+
+                    document.getElementById("searchResult")
+                        .innerHTML =
+                        "<h3>Connection Error</h3>";
+
+                });
+
+        }
+
+
+        // =================================
+        // HTML SECURITY
+        // =================================
+
+        function escapeHTML(value) {
+
+            var div =
+                document.createElement("div");
+
+
+            div.textContent =
+                value == null ? "" : value;
+
+
+            return div.innerHTML;
+
+        }
+
+
+        // =================================
+        // ENTER KEY SEARCH
+        // =================================
+
+        document.getElementById("searchText")
+            .addEventListener(
+                "keydown",
+                function(event) {
+
+                    if (event.key === "Enter") {
+
+                        searchData();
+
+                    }
+
+                }
+            );
 
         // =================================
         // SEARCH MULTIPLE FIELDS
         // =================================
 
-        function searchData() {
+        function searchDataX() {
 
 
             var searchText =
@@ -654,73 +934,35 @@
 
     </script>
 <script>
-    function populateSearchTypes(records) {
+function populateSearchTypes(searchFields) {
 
-    var searchType = document.getElementById("searchType");
+    var select =
+        document.getElementById("searchType");
 
-    // Clear existing options
-    searchType.innerHTML = "";
+    // Reset
+    select.innerHTML = "";
 
-    // All option
-    var allOption = document.createElement("option");
+
+    // All
+    var allOption =
+        document.createElement("option");
 
     allOption.value = "all";
     allOption.textContent = "All";
 
-    searchType.appendChild(allOption);
+    select.appendChild(allOption);
 
 
-    // Field names that should be available for searching
-    var fields = [
-        {
-            key: "fullName",
-            label: "Name"
-        },
-        {
-            key: "fatherName",
-            label: "Father Name"
-        },
-        {
-            key: "mobile",
-            label: "Mobile"
-        },
-        {
-            key: "email",
-            label: "Email"
-        },
-        {
-            key: "address",
-            label: "Address"
-        },
-        {
-            key: "userId",
-            label: "User ID"
-        }
-    ];
+    // Fields returned by Apps Script
+    searchFields.forEach(function(field) {
 
+        var option =
+            document.createElement("option");
 
-    // Only add fields that actually contain data
-    fields.forEach(function(field) {
+        option.value = field.key;
+        option.textContent = field.label;
 
-        var hasData = records.some(function(record) {
-
-            return record[field.key] !== undefined &&
-                   record[field.key] !== null &&
-                   String(record[field.key]).trim() !== "";
-
-        });
-
-
-        if (hasData) {
-
-            var option =
-                document.createElement("option");
-
-            option.value = field.key;
-            option.textContent = field.label;
-
-            searchType.appendChild(option);
-        }
+        select.appendChild(option);
 
     });
 
