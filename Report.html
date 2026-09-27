@@ -400,11 +400,199 @@ var SCRIPT_URL =
 // LOAD REPORT
 // =================================
 
+function loadReport() {
+
+    // =================================
+    // SHOW LOADING
+    // =================================
+
+    document
+        .getElementById("loading")
+        .style.display = "block";
+
+
+    // Hide old table
+
+    document
+        .getElementById("reportTable")
+        .style.display = "none";
+
+
+    // Clear old data
+
+    document
+        .getElementById("reportBody")
+        .innerHTML = "";
+
+
+    // =================================
+    // CREATE URL
+    // =================================
+
+    var url =
+        SCRIPT_URL +
+        "?action=report";
+
+
+    // =================================
+    // FETCH GOOGLE SHEET DATA
+    // =================================
+
+    fetch(url)
+
+        .then(function(response) {
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "HTTP Error: " +
+                    response.status
+                );
+
+            }
+
+            return response.json();
+
+        })
+
+
+        .then(function(data) {
+
+            // =================================
+            // HIDE LOADING
+            // =================================
+
+            document
+                .getElementById("loading")
+                .style.display = "none";
+
+
+            // =================================
+            // SUCCESS
+            // =================================
+
+            if (data.status === "success") {
+
+                // =================================
+                // ⭐ POPULATE SEARCH DROPDOWN
+                // =================================
+
+                populateSearchTypes(
+                    data.searchFields || []
+                );
+
+
+                // =================================
+                // GET TABLE BODY
+                // =================================
+
+                var tbody =
+                    document
+                    .getElementById("reportBody");
+
+
+                tbody.innerHTML = "";
+
+
+                // =================================
+                // DISPLAY RECORDS
+                // =================================
+
+                data.records.forEach(
+                    function(row) {
+
+                        var tr =
+                            document.createElement("tr");
+
+
+                        tr.innerHTML =
+
+                            "<td>" +
+                            escapeHTML(row.userId) +
+                            "</td>" +
+
+                            "<td>" +
+                            escapeHTML(row.fullName) +
+                            "</td>" +
+
+                            "<td>" +
+                            escapeHTML(row.fatherName) +
+                            "</td>" +
+
+                            "<td>" +
+                            escapeHTML(row.mobile) +
+                            "</td>" +
+
+                            "<td>" +
+                            escapeHTML(row.email) +
+                            "</td>" +
+
+                            "<td>" +
+                            escapeHTML(row.address) +
+                            "</td>";
+
+
+                        tbody.appendChild(tr);
+
+                    }
+                );
+
+
+                // =================================
+                // SHOW TABLE
+                // =================================
+
+                document
+                    .getElementById("reportTable")
+                    .style.display = "table";
+
+            }
+
+
+            // =================================
+            // ERROR FROM APPS SCRIPT
+            // =================================
+
+            else {
+
+                alert(
+                    data.message ||
+                    "Unable to load report"
+                );
+
+            }
+
+        })
+
+
+        // =================================
+        // CONNECTION ERROR
+        // =================================
+
+        .catch(function(error) {
+
+            document
+                .getElementById("loading")
+                .style.display = "none";
+
+
+            console.log(error);
+
+
+            alert(
+                "Connection Error"
+            );
+
+        });
+
+}
+
+    
 // =================================
 // LOAD REPORT
 // =================================
 
-function loadReport() {
+function loadReportOld2() {
 
     // =================================
     // SHOW LOADING
