@@ -321,6 +321,27 @@
 
     </div>
 
+<div class="search-box">
+
+    <select id="searchType">
+        <option value="all">All</option>
+    </select>
+
+    <input
+        type="text"
+        id="searchText"
+        placeholder="Search...">
+
+    <button
+        type="button"
+        class="search-button"
+        onclick="searchData();">
+
+        SEARCH
+
+    </button>
+
+</div>
 
     <!-- ================================
          LOADING
@@ -632,7 +653,80 @@
             );
 
     </script>
+<script>
+    function populateSearchTypes(records) {
 
+    var searchType = document.getElementById("searchType");
+
+    // Clear existing options
+    searchType.innerHTML = "";
+
+    // All option
+    var allOption = document.createElement("option");
+
+    allOption.value = "all";
+    allOption.textContent = "All";
+
+    searchType.appendChild(allOption);
+
+
+    // Field names that should be available for searching
+    var fields = [
+        {
+            key: "fullName",
+            label: "Name"
+        },
+        {
+            key: "fatherName",
+            label: "Father Name"
+        },
+        {
+            key: "mobile",
+            label: "Mobile"
+        },
+        {
+            key: "email",
+            label: "Email"
+        },
+        {
+            key: "address",
+            label: "Address"
+        },
+        {
+            key: "userId",
+            label: "User ID"
+        }
+    ];
+
+
+    // Only add fields that actually contain data
+    fields.forEach(function(field) {
+
+        var hasData = records.some(function(record) {
+
+            return record[field.key] !== undefined &&
+                   record[field.key] !== null &&
+                   String(record[field.key]).trim() !== "";
+
+        });
+
+
+        if (hasData) {
+
+            var option =
+                document.createElement("option");
+
+            option.value = field.key;
+            option.textContent = field.label;
+
+            searchType.appendChild(option);
+        }
+
+    });
+
+}
+
+</script>
 
 </body>
 
