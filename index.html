@@ -1,168 +1,628 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Ankit Telecommunication</title>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Ankit Telecommunication - Login</title>
+
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background: #f2f2f2;
-            margin: 0;
-        }
 
-        header {
-            background: #2196F3;
-            color: white;
-            padding: 20px;
-        }
-
-        .login-box {
-            background: white;
-            width: 350px;
-            margin: 50px auto;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px #aaa;
-        }
-
-        input {
-            width: 90%;
-            padding: 10px;
-            margin: 8px;
-            border: 1px solid #999;
-            border-radius: 5px;
+        * {
             box-sizing: border-box;
         }
 
-        button {
-            padding: 10px 25px;
-            margin: 10px;
+
+        body {
+
+            margin: 0;
+
+            font-family: Arial, sans-serif;
+
+            min-height: 100vh;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            overflow: hidden;
+
+            background: #07152b;
+
+            position: relative;
+
+        }
+
+
+        /* =========================
+           LIQUID BACKGROUND
+        ========================= */
+
+        .liquid {
+
+            position: absolute;
+
+            width: 700px;
+
+            height: 700px;
+
+            border-radius: 45% 55% 60% 40%;
+
+            background: linear-gradient(
+                135deg,
+                #00c6ff,
+                #0072ff
+            );
+
+            opacity: 0.65;
+
+            filter: blur(2px);
+
+            animation: liquidMove 8s ease-in-out infinite;
+
+        }
+
+
+        .liquid::before {
+
+            content: "";
+
+            position: absolute;
+
+            width: 600px;
+
+            height: 600px;
+
+            top: -120px;
+
+            left: 180px;
+
+            border-radius: 60% 40% 45% 55%;
+
+            background: linear-gradient(
+                135deg,
+                #00f2fe,
+                #4facfe
+            );
+
+            opacity: 0.55;
+
+            animation: liquidMove2 10s ease-in-out infinite;
+
+        }
+
+
+        .liquid::after {
+
+            content: "";
+
+            position: absolute;
+
+            width: 500px;
+
+            height: 500px;
+
+            left: -180px;
+
+            bottom: -100px;
+
+            border-radius: 40% 60% 55% 45%;
+
+            background: #00c6ff;
+
+            opacity: 0.4;
+
+            animation: liquidMove3 7s ease-in-out infinite;
+
+        }
+
+
+        @keyframes liquidMove {
+
+            0% {
+
+                transform:
+                    translate(-250px, -100px)
+                    rotate(0deg);
+
+                border-radius:
+                    45% 55% 60% 40%;
+
+            }
+
+            50% {
+
+                transform:
+                    translate(250px, 120px)
+                    rotate(180deg);
+
+                border-radius:
+                    60% 40% 45% 55%;
+
+            }
+
+            100% {
+
+                transform:
+                    translate(-250px, -100px)
+                    rotate(360deg);
+
+                border-radius:
+                    45% 55% 60% 40%;
+
+            }
+
+        }
+
+
+        @keyframes liquidMove2 {
+
+            0% {
+
+                transform:
+                    translate(0, 0)
+                    rotate(0deg);
+
+            }
+
+            50% {
+
+                transform:
+                    translate(-180px, 150px)
+                    rotate(180deg);
+
+            }
+
+            100% {
+
+                transform:
+                    translate(0, 0)
+                    rotate(360deg);
+
+            }
+
+        }
+
+
+        @keyframes liquidMove3 {
+
+            0% {
+
+                transform:
+                    translate(0, 0);
+
+            }
+
+            50% {
+
+                transform:
+                    translate(180px, -150px);
+
+            }
+
+            100% {
+
+                transform:
+                    translate(0, 0);
+
+            }
+
+        }
+
+
+        /* =========================
+           LOGIN BOX
+        ========================= */
+
+        .login-box {
+
+            position: relative;
+
+            z-index: 10;
+
+            width: 360px;
+
+            padding: 35px;
+
+            border-radius: 20px;
+
+            background:
+                rgba(255, 255, 255, 0.15);
+
+            backdrop-filter: blur(18px);
+
+            -webkit-backdrop-filter: blur(18px);
+
+            border:
+                1px solid
+                rgba(255,255,255,0.3);
+
+            box-shadow:
+                0 20px 50px
+                rgba(0,0,0,0.35);
+
+            text-align: center;
+
+            color: white;
+
+        }
+
+
+        .login-box h1 {
+
+            margin-bottom: 5px;
+
+        }
+
+
+        .login-box p {
+
+            margin-top: 0;
+
+            margin-bottom: 25px;
+
+            opacity: 0.8;
+
+        }
+
+
+        /* =========================
+           INPUT
+        ========================= */
+
+        .input-box {
+
+            margin-bottom: 18px;
+
+        }
+
+
+        .input-box input {
+
+            width: 100%;
+
+            padding: 13px;
+
             border: none;
-            border-radius: 5px;
-            cursor: pointer;
+
+            outline: none;
+
+            border-radius: 8px;
+
+            background:
+                rgba(255,255,255,0.9);
+
             font-size: 15px;
+
         }
 
-        .login-btn {
-            background: #2196F3;
+
+        /* =========================
+           BUTTON
+        ========================= */
+
+        .login-button {
+
+            width: 100%;
+
+            padding: 13px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #00c6ff,
+                    #0072ff
+                );
+
             color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+
         }
 
-        .signup-btn {
-            background: #4CAF50;
-            color: white;
+
+        .login-button:hover {
+
+            transform: scale(1.03);
+
+            box-shadow:
+                0 5px 20px
+                rgba(0,198,255,0.5);
+
         }
+
+
+        /* =========================
+           SIGN UP
+        ========================= */
+
+        .signup-button {
+
+            margin-top: 15px;
+
+            background: transparent;
+
+            border: none;
+
+            color: white;
+
+            cursor: pointer;
+
+            text-decoration: underline;
+
+        }
+
+
+        /* =========================
+           LOADING
+        ========================= */
+
+        #loading {
+
+            display: none;
+
+            margin-top: 15px;
+
+        }
+
+
+        .spinner {
+
+            width: 30px;
+
+            height: 30px;
+
+            border: 4px solid
+                rgba(255,255,255,0.3);
+
+            border-top: 4px solid white;
+
+            border-radius: 50%;
+
+            margin: auto;
+
+            animation:
+                spin 1s linear infinite;
+
+        }
+
+
+        @keyframes spin {
+
+            100% {
+
+                transform:
+                    rotate(360deg);
+
+            }
+
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media(max-width:500px) {
+
+            .login-box {
+
+                width: 90%;
+
+                padding: 25px;
+
+            }
+
+            .liquid {
+
+                width: 500px;
+
+                height: 500px;
+
+            }
+
+        }
+
     </style>
+
 </head>
+
 
 <body>
 
-    
-    <div class="login-box">
 
-        <h2>Sign In</h2>
+<!-- LIQUID ANIMATION -->
+
+<div class="liquid"></div>
+
+
+<!-- LOGIN BOX -->
+
+<div class="login-box">
+
+    <h1>
+        Ankit Telecommunication
+    </h1>
+
+    <p>
+        User Login
+    </p>
+
+
+    <div class="input-box">
 
         <input
             type="text"
             id="userId"
-            placeholder="Enter User ID">
+            placeholder="User ID">
+
+    </div>
+
+
+    <div class="input-box">
 
         <input
             type="password"
             id="password"
-            placeholder="Enter Password">
-
-        <br>
-
-        <button
-            type="button"
-            class="login-btn"
-            onclick="login()">
-            SIGN IN
-        </button>
-
-        <br>
-
-        <button
-            type="button"
-            class="signup-btn"
-            onclick="window.location.href='signup.html'">
-            SIGN UP
-        </button>
-
+            placeholder="Password">
 
     </div>
 
-    <script>
 
-        const SCRIPT_URL =
-        "https://script.google.com/macros/s/AKfycbwZQRh8V7aYYMo6VImvdZqZJl4r5ptSjSHVrc7b4WJeGgO4f1A-gTB11eRfZpKVDfdrvA/exec";
+    <button
+        class="login-button"
+        onclick="loginUser()">
 
+        LOGIN
 
-        function login() {
-
-            var userId =
-                document.getElementById("userId").value.trim();
-
-            var password =
-                document.getElementById("password").value.trim();
+    </button>
 
 
-            if (userId === "" || password === "") {
+    <button
+        class="signup-button"
+        onclick="window.location.href='signup.html'">
 
-                alert("Please enter User ID and Password");
+        Create New Account
 
-                return;
+    </button>
+
+
+    <div id="loading">
+
+        <div class="spinner"></div>
+
+        <p>Checking Login...</p>
+
+    </div>
+
+</div>
+
+
+<script>
+
+
+var SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbxoaSAp8cUA89G3Y4lspGr67jUAzU00EEZH2IF5ZJYyoiYUdUlEH5Fh0SBIGJi5bw6gSw/exec";
+
+
+function loginUser() {
+
+
+    var userId =
+        document.getElementById("userId")
+        .value.trim();
+
+
+    var password =
+        document.getElementById("password")
+        .value.trim();
+
+
+    if (userId === "") {
+
+        alert("Please enter User ID");
+
+        return;
+
+    }
+
+
+    if (password === "") {
+
+        alert("Please enter Password");
+
+        return;
+
+    }
+
+
+    document.getElementById("loading")
+        .style.display = "block";
+
+
+    var url =
+        SCRIPT_URL +
+        "?action=login" +
+        "&userId=" +
+        encodeURIComponent(userId) +
+        "&password=" +
+        encodeURIComponent(password);
+
+
+    fetch(url)
+
+        .then(function(response) {
+
+            return response.json();
+
+        })
+
+
+        .then(function(data) {
+
+
+            document.getElementById("loading")
+                .style.display = "none";
+
+
+            if (data.status === "success") {
+
+                alert("Login Successful");
+
+                window.location.href =
+                    "home.html";
+
             }
 
+            else {
 
-            var url =
-                SCRIPT_URL +
-                "?action=login" +
-                "&userId=" +
-                encodeURIComponent(userId) +
-                "&password=" +
-                encodeURIComponent(password);
+                alert(
+                    data.message ||
+                    "Invalid User ID or Password"
+                );
+
+            }
+
+        })
 
 
-            fetch(url)
+        .catch(function(error) {
 
-                .then(function(response) {
-                    return response.json();
-                })
 
-                .then(function(data) {
+            document.getElementById("loading")
+                .style.display = "none";
 
-                    if (data.status === "success") {
 
-                        alert("Login Successful");
+            console.log(error);
 
-                        window.location.href = "home.html";
+            alert("Connection Error");
 
-                    } else {
+        });
 
-                        alert(data.message);
+}
 
-                    }
+</script>
 
-                })
-
-                .catch(function(error) {
-
-                    console.error(error);
-
-                    alert("Connection Error");
-
-                });
-        }
-
-    </script>
 
 </body>
+
 </html>
 
