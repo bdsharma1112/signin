@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,158 +11,120 @@
 
     <title>Sign Up</title>
 
-
     <style>
 
         body {
             font-family: Arial, sans-serif;
-            background: #f2f2f2;
+            background: #07152b;
             margin: 0;
             text-align: center;
         }
 
-
         .signup-box {
-
-            background: white;
-
-            width: 400px;
-
+            background: lightblue;
+            width: 450px;
             max-width: 90%;
-
             margin: 30px auto;
-
             padding: 25px;
-
             border-radius: 10px;
-
             box-shadow: 0 0 10px #aaa;
         }
 
-
         input,
         textarea {
-
             width: 95%;
-
             padding: 10px;
-
             margin: 8px 0;
-
             border: 1px solid #999;
-
             border-radius: 5px;
-
             box-sizing: border-box;
-
             font-size: 15px;
         }
 
-
         textarea {
-
             height: 80px;
-
             resize: vertical;
         }
 
-
         button {
-
             padding: 12px 25px;
-
             margin: 10px 5px;
-
             border: none;
-
             border-radius: 5px;
-
             cursor: pointer;
-
             font-size: 15px;
         }
 
+	
+
 
         .create-btn {
-
             background: #4CAF50;
-
             color: white;
         }
 
-
+	  
         .create-btn:disabled {
-
             background: #999;
-
             cursor: not-allowed;
         }
 
-
         .back-btn {
-
             background: red;
-
             color: white;
         }
 
+	button:hover {
+            background: blue;
+	
+        /* PASSWORD MESSAGE */
 
-        /* =========================
-           DELAY / LOADING ANIMATION
-           ========================= */
+        #passwordMessage {
+            font-weight: bold;
+            margin: 5px;
+        }
+
+        .match {
+            color: green;
+        }
+
+        .not-match {
+            color: red;
+        }
+
+        /* LOADING */
 
         #delayAnimation {
-
             display: none;
-
             position: fixed;
-
             top: 0;
             left: 0;
-
             width: 100%;
             height: 100%;
-
             background: rgba(255,255,255,0.95);
-
             z-index: 9999;
-
             justify-content: center;
-
             align-items: center;
-
             flex-direction: column;
         }
 
-
         .loader {
-
             width: 50px;
-
             height: 50px;
-
             border: 5px solid #ddd;
-
             border-top: 5px solid #2196F3;
-
             border-radius: 50%;
-
             animation: spin 1s linear infinite;
         }
-
 
         @keyframes spin {
 
             0% {
-
                 transform: rotate(0deg);
-
             }
 
             100% {
-
                 transform: rotate(360deg);
-
             }
 
         }
@@ -170,338 +133,407 @@
 
 </head>
 
-
 <body>
 
 
-    <!-- =========================
-         SIGN UP FORM
-         ========================= -->
+<div class="signup-box">
 
-    <div class="signup-box">
+    <h2>Welcome</h2>
 
-        <h2>SIGN UP</h2>
 
+    <input
+        type="text"
+        id="fullName"
+        placeholder="Full Name"
+        required>
 
-        <input
-            type="text"
-            id="fullName"
-            placeholder="Full Name">
 
+    
 
-        <input
-            type="text"
-            id="fatherName"
-            placeholder="Father's Name">
+    <input
+        type="tel"
+        id="mobile"
+        placeholder="Mobile No."
+        required>
 
 
-        <input
-            type="tel"
-            id="mobile"
-            placeholder="Mobile No.">
+    <input
+        type="email"
+        id="email"
+        placeholder="Email ID"
+        required>
 
 
-        <input
-            type="email"
-            id="email"
-            placeholder="Email ID">
 
+    <input
+        type="text"
+        id="userId"
+        placeholder="Enter User ID"
+        required>
 
-        <textarea
-            id="address"
-            placeholder="Address"></textarea>
 
+    <input
+        type="password"
+        id="password"
+        placeholder="Enter Password"
+        required
+        oninput="checkPassword()">
 
-        <input
-            type="text"
-            id="signupUserId"
-            placeholder="Create User ID">
 
+    <input
+        type="password"
+        id="confirmPassword"
+        placeholder="Confirm Password"
+        required
+        oninput="checkPassword()">
 
-        <input
-            type="password"
-            id="signupPassword"
-            placeholder="Create Password">
 
+    <div id="passwordMessage"></div>
 
-        <br>
 
+    <div id="message"></div>
 
-        <button
-            type="button"
-            class="create-btn"
-            onclick="createAccount()">
 
-            CREATE ACCOUNT
+    <br>
 
-        </button>
 
+    <button
+        type="button"
+        class="create-btn"
+        onclick="createAccount()">
 
-        <button
-            type="button"
-            class="back-btn"
-            onclick="window.location.href='index.html'">
+        CREATE ACCOUNT
 
-            BACK TO LOGIN
+    </button>
 
-        </button>
 
-    </div>
+    <button
+        type="button"
+        class="back-btn"
+        onclick="window.location.href='index.html'">
 
+        BACK TO LOGIN
 
+    </button>
 
-    <!-- =========================
-         DELAY ANIMATION
-         ========================= -->
+</div>
 
-    <div id="delayAnimation">
 
-        <div class="loader"></div>
 
-        <h3>Please Wait...</h3>
+<!-- =========================
+     LOADING ANIMATION
+========================= -->
 
-        <p>Submitting your information...</p>
+<div id="delayAnimation">
 
-    </div>
+    <div class="loader"></div>
 
+    <h3>Please Wait...</h3>
 
+    <p>Submitting your information...</p>
 
-    <script>
+</div>
 
 
-        // =========================
-        // GOOGLE APPS SCRIPT URL
-        // =========================
 
-        const SCRIPT_URL =
-        "https://script.google.com/macros/s/AKfycbxXlGnTpTAKkSv_cHnH7n1CcQpnns_tXGglecg6kP6mAiHguAqCFrxLJbfCo0HHKwxAMg/exec";
+<script>
 
 
+// =================================
+// GOOGLE APPS SCRIPT URL
+// =================================
 
-        // =========================
-        // CREATE ACCOUNT
-        // =========================
+const SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbxXlGnTpTAKkSv_cHnH7n1CcQpnns_tXGglecg6kP6mAiHguAqCFrxLJbfCo0HHKwxAMg/exec";
 
-        function createAccount() {
 
 
-            // GET ALL VALUES
+// =================================
+// CHECK PASSWORD
+// =================================
 
-            var fullName =
-                document.getElementById("fullName").value.trim();
+function checkPassword() {
 
+    var password =
+        document.getElementById("password").value;
 
-            var fatherName =
-                document.getElementById("fatherName").value.trim();
+    var confirmPassword =
+        document.getElementById("confirmPassword").value;
 
+    var message =
+        document.getElementById("passwordMessage");
 
-            var mobile =
-                document.getElementById("mobile").value.trim();
 
+    if (confirmPassword === "") {
 
-            var email =
-                document.getElementById("email").value.trim();
+        message.innerHTML = "";
 
+        return false;
 
-            var address =
-                document.getElementById("address").value.trim();
+    }
 
 
-            var userId =
-                document.getElementById("signupUserId").value.trim();
+    if (password === confirmPassword) {
 
+        message.innerHTML =
+            "✓ Password Matched";
 
-            var password =
-                document.getElementById("signupPassword").value.trim();
+        message.className =
+            "match";
 
+        return true;
 
+    }
 
-            // =========================
-            // CHECK ALL FIELDS
-            // =========================
+    else {
 
-            if (
-                fullName === "" ||
-                fatherName === "" ||
-                mobile === "" ||
-                email === "" ||
-                address === "" ||
-                userId === "" ||
-                password === ""
-            ) {
+        message.innerHTML =
+            "✗ Password Not Matched";
 
-                alert("Please fill all fields");
+        message.className =
+            "not-match";
 
-                return;
+        return false;
+
+    }
+
+}
+
+
+
+// =================================
+// CREATE ACCOUNT
+// =================================
+
+function createAccount() {
+
+
+    // =================================
+    // GET VALUES
+    // =================================
+
+    var fullName =
+        document.getElementById("fullName")
+        .value.trim();
+
+
+     var mobile =
+        document.getElementById("mobile")
+        .value.trim();
+
+
+    var email =
+        document.getElementById("email")
+        .value.trim();
+
+
+   
+    var userId =
+        document.getElementById("userId")
+        .value.trim();
+
+
+    var password =
+        document.getElementById("password")
+        .value;
+
+
+    var confirmPassword =
+        document.getElementById("confirmPassword")
+        .value;
+
+
+
+    // =================================
+    // CHECK EMPTY FIELDS
+    // =================================
+
+    if (
+        fullName === "" ||
+        mobile === "" ||
+        email === "" ||
+        userId === "" ||
+        password === "" ||
+        confirmPassword === ""
+    ) {
+
+        alert("Please fill all fields");
+
+        return;
+
+    }
+
+
+
+    // =================================
+    // CHECK PASSWORD
+    // =================================
+
+    if (password !== confirmPassword) {
+
+        alert("Password and Confirm Password do not match");
+
+        document
+            .getElementById("confirmPassword")
+            .focus();
+
+        return;
+
+    }
+
+
+
+    // =================================
+    // CREATE BUTTON
+    // =================================
+
+    var createButton =
+        document.querySelector(".create-btn");
+
+
+
+    // =================================
+    // SHOW LOADING
+    // =================================
+
+    document
+        .getElementById("delayAnimation")
+        .style.display = "flex";
+
+
+
+    // =================================
+    // DISABLE BUTTON
+    // =================================
+
+    createButton.disabled = true;
+
+    createButton.innerText =
+        "Submitting...";
+
+
+
+    // =================================
+    // CREATE URL
+    // =================================
+
+    var url =
+        SCRIPT_URL +
+        "?action=signup" +
+        "&fullName=" +
+        encodeURIComponent(fullName) +
+        "&mobile=" +
+        encodeURIComponent(mobile) +
+        "&email=" +
+        encodeURIComponent(email) +
+        "&userId=" +
+        encodeURIComponent(userId) +
+        "&password=" +
+        encodeURIComponent(password);
+
+
+
+    // =================================
+    // SEND DATA
+    // =================================
+
+    fetch(url)
+
+        .then(function(response) {
+
+            return response.json();
+
+        })
+
+
+        .then(function(data) {
+
+
+            // =================================
+            // SUCCESS
+            // =================================
+
+            if (data.status === "success") {
+
+
+                document
+                    .getElementById("delayAnimation")
+                    .style.display = "none";
+
+
+                alert(
+                    "Account Created Successfully"
+                );
+
+
+                window.location.href =
+                    "index.html";
+
             }
 
 
+            // =================================
+            // ERROR
+            // =================================
 
-            // =========================
-            // CREATE BUTTON
-            // =========================
-
-            var createButton =
-                document.querySelector(".create-btn");
+            else {
 
 
-
-            // =========================
-            // SHOW DELAY ANIMATION
-            // =========================
-
-            document.getElementById("delayAnimation")
-                .style.display = "flex";
+                document
+                    .getElementById("delayAnimation")
+                    .style.display = "none";
 
 
+                createButton.disabled =
+                    false;
 
-            // =========================
-            // DISABLE BUTTON
-            // =========================
 
-            createButton.disabled = true;
+                createButton.innerText =
+                    "CREATE ACCOUNT";
+
+
+                alert(
+                    data.message ||
+                    "Unable to create account"
+                );
+
+            }
+
+        })
+
+
+        // =================================
+        // CONNECTION ERROR
+        // =================================
+
+        .catch(function(error) {
+
+
+            document
+                .getElementById("delayAnimation")
+                .style.display = "none";
+
+
+            createButton.disabled =
+                false;
+
 
             createButton.innerText =
-                "Submitting...";
+                "CREATE ACCOUNT";
 
 
-
-            // =========================
-            // CREATE URL
-            // =========================
-
-            var url =
-                SCRIPT_URL +
-                "?action=signup" +
-                "&fullName=" +
-                encodeURIComponent(fullName) +
-                "&fatherName=" +
-                encodeURIComponent(fatherName) +
-                "&mobile=" +
-                encodeURIComponent(mobile) +
-                "&email=" +
-                encodeURIComponent(email) +
-                "&address=" +
-                encodeURIComponent(address) +
-                "&userId=" +
-                encodeURIComponent(userId) +
-                "&password=" +
-                encodeURIComponent(password);
+            console.log(error);
 
 
+            alert(
+                "Connection Error"
+            );
 
-            // =========================
-            // SEND DATA
-            // =========================
+        });
 
-            fetch(url)
+}
 
-                .then(function(response) {
-
-                    return response.json();
-
-                })
-
-
-                .then(function(data) {
-
-
-                    // =========================
-                    // SUCCESS
-                    // =========================
-
-                    if (data.status === "success") {
-
-
-                        // HIDE ANIMATION
-
-                        document.getElementById(
-                            "delayAnimation"
-                        ).style.display = "none";
-
-
-                        // SUCCESS MESSAGE
-
-                        alert(
-                            "Account Created Successfully"
-                        );
-
-
-                        // GO TO LOGIN PAGE
-
-                        window.location.href =
-                            "index.html";
-
-                    }
-
-
-                    // =========================
-                    // ERROR
-                    // =========================
-
-                    else {
-
-
-                        // HIDE ANIMATION
-
-                        document.getElementById(
-                            "delayAnimation"
-                        ).style.display = "none";
-
-
-                        // ENABLE BUTTON
-
-                        createButton.disabled =
-                            false;
-
-
-                        createButton.innerText =
-                            "CREATE ACCOUNT";
-
-
-                        alert(data.message);
-
-                    }
-
-                })
-
-
-                // =========================
-                // CONNECTION ERROR
-                // =========================
-
-                .catch(function(error) {
-
-
-                    // HIDE ANIMATION
-
-                    document.getElementById(
-                        "delayAnimation"
-                    ).style.display = "none";
-
-
-                    // ENABLE BUTTON
-
-                    createButton.disabled =
-                        false;
-
-
-                    createButton.innerText =
-                        "CREATE ACCOUNT";
-
-
-                    console.log(error);
-
-
-                    alert(
-                        "Connection Error"
-                    );
-
-                });
-
-        }
-
-    </script>
+</script>
 
 
 </body>
