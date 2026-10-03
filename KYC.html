@@ -1,0 +1,1198 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Data Collection Form</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: #f2f2f2;
+}
+
+header {
+    background: #2196F3;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+header h1,
+header p {
+    margin: 5px;
+}
+
+.container {
+    width: 90%;
+    max-width: 800px;
+    margin: 25px auto;
+}
+
+.form-section {
+    background: white;
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 8px #bbb;
+}
+
+.section-title {
+    background: #2196F3;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 0;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+}
+
+.form-group {
+    flex: 1;
+}
+
+label {
+    display: block;
+    margin-top: 12px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+    font-size: 15px;
+}
+
+textarea {
+    height: 90px;
+    resize: vertical;
+}
+
+.required {
+    color: red;
+}
+
+/* LOCATION */
+
+.location-section {
+    background: white;
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 8px #bbb;
+    text-align: center;
+}
+
+.location-section h2 {
+    background: #2196F3;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.location-button {
+    background: #2196F3;
+    color: white;
+}
+
+.location-status {
+    margin-top: 15px;
+    font-weight: bold;
+    line-height: 1.7;
+}
+
+/* PHOTO */
+
+.photo-section {
+    text-align: center;
+}
+
+#camera {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 10px;
+    background: black;
+}
+
+#photoPreview {
+    display: none;
+    width: 180px;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin: 15px auto;
+}
+
+.buttons {
+    text-align: center;
+    margin: 20px 0;
+}
+
+button {
+    padding: 12px 25px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.85;
+}
+
+.submit-button {
+    background: green;
+}
+
+.reset-button {
+    background: #ff9800;
+}
+
+.back-button {
+    background: #2196F3;
+}
+
+.camera-button {
+    background: #2196F3;
+    font-size: 28px;
+    border-radius: 50%;
+    width: 65px;
+    height: 65px;
+    padding: 0;
+}
+
+.capture-button {
+    background: green;
+}
+
+.retake-button {
+    background: #ff9800;
+}
+
+#message {
+    text-align: center;
+    font-weight: bold;
+    margin: 15px;
+}
+
+.loading {
+    display: none;
+    text-align: center;
+    color: #2196F3;
+    font-weight: bold;
+    margin: 15px;
+}
+
+@media screen and (max-width: 600px) {
+
+    .container {
+        width: 95%;
+    }
+
+    .form-row {
+        display: block;
+    }
+
+    header h1 {
+        font-size: 24px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>KYC</h1>
+
+<p>Data Collection Form</p>
+
+<p>
+please submit kyc
+</p>
+
+</header>
+
+
+<div class="container">
+
+<form id="dataForm">
+
+<!-- =========================
+     PERSONAL DETAILS
+========================= -->
+
+<div class="form-section">
+
+<h2 class="section-title">
+Personal Details
+</h2>
+
+<div class="form-row">
+
+<div class="form-group">
+
+<label>
+Full Name <span class="required">*</span>
+</label>
+
+<input
+type="text"
+id="fullName"
+placeholder="Enter Full Name"
+required>
+
+</div>
+
+
+<div class="form-group">
+
+<label>
+Father Name <span class="required">*</span>
+</label>
+
+<input
+type="text"
+id="fatherName"
+placeholder="Enter Father Name"
+required>
+
+</div>
+
+</div>
+
+
+<div class="form-row">
+
+<div class="form-group">
+
+<label>Date of Birth</label>
+
+<input
+type="date"
+id="dob">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Gender</label>
+
+<select id="gender">
+
+<option value="">Select Gender</option>
+
+<option value="Male">Male</option>
+
+<option value="Female">Female</option>
+
+<option value="Other">Other</option>
+
+</select>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =========================
+     CONTACT DETAILS
+========================= -->
+
+<div class="form-section">
+
+<h2 class="section-title">
+Contact Details
+</h2>
+
+<div class="form-row">
+
+<div class="form-group">
+
+<label>
+Mobile Number <span class="required">*</span>
+</label>
+
+<input
+type="tel"
+id="mobile"
+maxlength="10"
+placeholder="Enter 10 Digit Mobile Number"
+required>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Email</label>
+
+<input
+type="email"
+id="email"
+placeholder="Enter Email Address">
+
+</div>
+
+</div>
+
+
+<label>
+Address <span class="required">*</span>
+</label>
+
+<textarea
+id="address"
+placeholder="Enter Complete Address"
+required></textarea>
+
+
+<div class="form-row">
+
+<div class="form-group">
+
+<label>City</label>
+
+<input
+type="text"
+id="city"
+placeholder="Enter City">
+
+</div>
+
+
+<div class="form-group">
+
+<label>District</label>
+
+<input
+type="text"
+id="district"
+placeholder="Enter District">
+
+</div>
+
+
+<div class="form-group">
+
+<label>PIN Code</label>
+
+<input
+type="text"
+id="pincode"
+maxlength="6"
+placeholder="Enter PIN Code">
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =========================
+     ADDITIONAL DETAILS
+========================= -->
+
+<div class="form-section">
+
+<h2 class="section-title">
+Additional Details
+</h2>
+
+<label>Occupation</label>
+
+<select id="occupation">
+
+<option value="">Select Occupation</option>
+
+<option value="Business">Business</option>
+
+<option value="Private Job">Private Job</option>
+
+<option value="Government Job">
+Government Job
+</option>
+
+<option value="Student">Student</option>
+
+<option value="Other">Other</option>
+
+</select>
+
+
+<label>Remarks</label>
+
+<textarea
+id="remarks"
+placeholder="Enter Remarks"></textarea>
+
+</div>
+
+
+<!-- =========================
+     PHOTO CAPTURE
+========================= -->
+
+<div class="form-section photo-section">
+
+<h2 class="section-title">
+Capture Photo
+</h2>
+
+<label>
+Applicant Photo
+</label>
+
+<video
+id="camera"
+autoplay
+playsinline
+style="display:none;">
+</video>
+
+<canvas
+id="photoCanvas"
+style="display:none;">
+</canvas>
+
+<img
+id="photoPreview"
+alt="Photo Preview">
+
+<br>
+
+<button
+type="button"
+class="camera-button"
+onclick="startCamera()"
+title="Open Camera">
+
+📷
+
+</button>
+
+<br>
+
+<button
+type="button"
+class="capture-button"
+onclick="capturePhoto()">
+
+CAPTURE PHOTO
+
+</button>
+
+<button
+type="button"
+class="retake-button"
+onclick="retakePhoto()">
+
+RETAKE
+
+</button>
+
+</div>
+
+
+<!-- =========================
+     LOCATION
+========================= -->
+
+<div class="location-section">
+
+<h2>
+📍 Current Location
+</h2>
+
+<button
+type="button"
+class="location-button"
+onclick="getLocation()">
+
+📍 GET CURRENT LOCATION
+
+</button>
+
+<p
+id="locationStatus"
+class="location-status">
+
+Location not captured
+
+</p>
+
+<input
+type="hidden"
+id="latitude">
+
+<input
+type="hidden"
+id="longitude">
+
+</div>
+
+
+<div id="loading" class="loading">
+⏳ Submitting data...
+</div>
+
+
+<div id="message"></div>
+
+
+<!-- =========================
+     BUTTONS
+========================= -->
+
+<div class="buttons">
+
+<button
+type="submit"
+class="submit-button">
+
+SUBMIT
+
+</button>
+
+
+<button
+type="reset"
+class="reset-button"
+onclick="resetForm()">
+
+RESET
+
+</button>
+
+
+<button
+type="button"
+class="back-button"
+onclick="window.location.href='home.html'">
+
+BACK
+
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+
+<script>
+
+// =================================
+// GOOGLE APPS SCRIPT URL
+// =================================
+
+const SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbwcegNrOYLleArW4cDwYeOkidMZQx4ZDr6cIParJeb2Ku0Gq-WGW_2pGsae7OUTANk4Kg/exec";
+
+
+// =================================
+// CAMERA
+// =================================
+
+var cameraStream = null;
+
+
+function startCamera() {
+
+    var camera = document.getElementById("camera");
+
+    if (!navigator.mediaDevices ||
+        !navigator.mediaDevices.getUserMedia) {
+
+        alert("Camera is not supported in this browser.");
+        return;
+    }
+
+    navigator.mediaDevices.getUserMedia({
+        video: {
+            facingMode: "user"
+        },
+        audio: false
+    })
+
+    .then(function(stream) {
+
+        cameraStream = stream;
+
+        camera.srcObject = stream;
+
+        camera.style.display = "block";
+
+    })
+
+    .catch(function(error) {
+
+        console.log(error);
+
+        alert(
+            "Camera permission denied or camera not available."
+        );
+
+    });
+
+}
+
+
+function capturePhoto() {
+
+    var camera =
+        document.getElementById("camera");
+
+    var canvas =
+        document.getElementById("photoCanvas");
+
+    var preview =
+        document.getElementById("photoPreview");
+
+
+    if (!cameraStream) {
+
+        alert("Please open camera first.");
+
+        return;
+
+    }
+
+
+    canvas.width = camera.videoWidth;
+
+    canvas.height = camera.videoHeight;
+
+
+    var context =
+        canvas.getContext("2d");
+
+
+    context.drawImage(
+        camera,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    var photoData =
+        canvas.toDataURL(
+            "image/jpeg",
+            0.8
+        );
+
+
+    preview.src = photoData;
+
+    preview.style.display = "block";
+
+    camera.style.display = "none";
+
+
+    stopCamera();
+
+}
+
+
+function stopCamera() {
+
+    if (cameraStream) {
+
+        cameraStream
+        .getTracks()
+        .forEach(function(track) {
+
+            track.stop();
+
+        });
+
+        cameraStream = null;
+
+    }
+
+}
+
+
+function retakePhoto() {
+
+    document.getElementById(
+        "photoPreview"
+    ).style.display = "none";
+
+    startCamera();
+
+}
+
+
+// =================================
+// GET GPS LOCATION
+// =================================
+
+function getLocation() {
+
+    var status =
+        document.getElementById(
+            "locationStatus"
+        );
+
+
+    if (!navigator.geolocation) {
+
+        status.innerHTML =
+            "❌ Geolocation is not supported";
+
+        return;
+
+    }
+
+
+    status.innerHTML =
+        "📍 Getting current location...";
+
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position) {
+
+            var latitude =
+                position.coords.latitude;
+
+            var longitude =
+                position.coords.longitude;
+
+
+            document.getElementById(
+                "latitude"
+            ).value = latitude;
+
+
+            document.getElementById(
+                "longitude"
+            ).value = longitude;
+
+
+            status.innerHTML =
+                "✓ Location Captured<br>" +
+                "Latitude: " +
+                latitude.toFixed(6) +
+                "<br>" +
+                "Longitude: " +
+                longitude.toFixed(6);
+
+        },
+
+
+        function(error) {
+
+            if (error.code === 1) {
+
+                status.innerHTML =
+                    "❌ Location permission denied";
+
+            }
+            else if (error.code === 2) {
+
+                status.innerHTML =
+                    "❌ Location unavailable";
+
+            }
+            else {
+
+                status.innerHTML =
+                    "❌ Unable to get location";
+
+            }
+
+        },
+
+        {
+            enableHighAccuracy: true,
+            timeout: 15000,
+            maximumAge: 0
+        }
+
+    );
+
+}
+
+
+// =================================
+// FORM SUBMIT
+// =================================
+
+document
+.getElementById("dataForm")
+.addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+
+        var fullName =
+            document.getElementById(
+                "fullName"
+            ).value.trim();
+
+
+        var fatherName =
+            document.getElementById(
+                "fatherName"
+            ).value.trim();
+
+
+        var dob =
+            document.getElementById(
+                "dob"
+            ).value;
+
+
+        var gender =
+            document.getElementById(
+                "gender"
+            ).value;
+
+
+        var mobile =
+            document.getElementById(
+                "mobile"
+            ).value.trim();
+
+
+        var email =
+            document.getElementById(
+                "email"
+            ).value.trim();
+
+
+        var address =
+            document.getElementById(
+                "address"
+            ).value.trim();
+
+
+        var city =
+            document.getElementById(
+                "city"
+            ).value.trim();
+
+
+        var district =
+            document.getElementById(
+                "district"
+            ).value.trim();
+
+
+        var pincode =
+            document.getElementById(
+                "pincode"
+            ).value.trim();
+
+
+        var occupation =
+            document.getElementById(
+                "occupation"
+            ).value;
+
+
+        var remarks =
+            document.getElementById(
+                "remarks"
+            ).value.trim();
+
+
+        var latitude =
+            document.getElementById(
+                "latitude"
+            ).value;
+
+
+        var longitude =
+            document.getElementById(
+                "longitude"
+            ).value;
+
+
+        // =========================
+        // VALIDATION
+        // =========================
+
+        if (fullName === "") {
+
+            alert("Please enter Full Name");
+            return;
+
+        }
+
+
+        if (fatherName === "") {
+
+            alert("Please enter Father Name");
+            return;
+
+        }
+
+
+        if (mobile === "") {
+
+            alert("Please enter Mobile Number");
+            return;
+
+        }
+
+
+        if (mobile.length !== 10) {
+
+            alert(
+                "Please enter valid 10 digit mobile number"
+            );
+
+            return;
+
+        }
+
+
+        if (address === "") {
+
+            alert("Please enter Address");
+            return;
+
+        }
+
+
+        // =========================
+        // LOADING
+        // =========================
+
+        document.getElementById(
+            "loading"
+        ).style.display = "block";
+
+
+        document.getElementById(
+            "message"
+        ).innerHTML = "";
+
+
+        // =========================
+        // SEND DATA
+        // =========================
+
+        var url =
+            SCRIPT_URL +
+            "?action=saveData" +
+            "&fullName=" +
+            encodeURIComponent(fullName) +
+            "&fatherName=" +
+            encodeURIComponent(fatherName) +
+            "&dob=" +
+            encodeURIComponent(dob) +
+            "&gender=" +
+            encodeURIComponent(gender) +
+            "&mobile=" +
+            encodeURIComponent(mobile) +
+            "&email=" +
+            encodeURIComponent(email) +
+            "&address=" +
+            encodeURIComponent(address) +
+            "&city=" +
+            encodeURIComponent(city) +
+            "&district=" +
+            encodeURIComponent(district) +
+            "&pincode=" +
+            encodeURIComponent(pincode) +
+            "&occupation=" +
+            encodeURIComponent(occupation) +
+            "&remarks=" +
+            encodeURIComponent(remarks) +
+            "&latitude=" +
+            encodeURIComponent(latitude) +
+            "&longitude=" +
+            encodeURIComponent(longitude);
+
+
+        fetch(url)
+
+        .then(function(response) {
+
+            return response.json();
+
+        })
+
+        .then(function(data) {
+
+            document.getElementById(
+                "loading"
+            ).style.display = "none";
+
+
+            if (data.status === "success") {
+
+                document.getElementById(
+                    "message"
+                ).innerHTML =
+                    "✓ Data submitted successfully.";
+
+                document.getElementById(
+                    "message"
+                ).style.color = "green";
+
+
+                document
+                .getElementById("dataForm")
+                .reset();
+
+
+                document.getElementById(
+                    "latitude"
+                ).value = "";
+
+
+                document.getElementById(
+                    "longitude"
+                ).value = "";
+
+
+                document.getElementById(
+                    "locationStatus"
+                ).innerHTML =
+                    "Location not captured";
+
+
+                document.getElementById(
+                    "photoPreview"
+                ).style.display = "none";
+
+            }
+            else {
+
+                document.getElementById(
+                    "message"
+                ).innerHTML =
+                    data.message ||
+                    "Data submission failed.";
+
+                document.getElementById(
+                    "message"
+                ).style.color = "red";
+
+            }
+
+        })
+
+        .catch(function(error) {
+
+            console.log(error);
+
+
+            document.getElementById(
+                "loading"
+            ).style.display = "none";
+
+
+            document.getElementById(
+                "message"
+            ).innerHTML =
+                "❌ Connection Error";
+
+            document.getElementById(
+                "message"
+            ).style.color = "red";
+
+        });
+
+    }
+);
+
+
+// =================================
+// RESET
+// =================================
+
+function resetForm() {
+
+    stopCamera();
+
+
+    document.getElementById(
+        "camera"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "photoPreview"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "latitude"
+    ).value = "";
+
+
+    document.getElementById(
+        "longitude"
+    ).value = "";
+
+
+    document.getElementById(
+        "locationStatus"
+    ).innerHTML =
+        "Location not captured";
+
+
+    document.getElementById(
+        "message"
+    ).innerHTML = "";
+
+}
+
+</script>
+
+	<script>
+
+	function logout() {
+
+    	sessionStorage.removeItem("loginStatus");
+
+    	window.location.href = "index.html";
+
+	}
+
+</script>
+</body>
+
+</html>
+
