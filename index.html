@@ -583,12 +583,11 @@ function loginUser() {
                 .style.display = "none";
 
 
-            if (data.status === "success") {
+          f (data.status === "success") {
 
-                alert("Login Successful");
+    		sessionStorage.setItem("loginStatus", "success");
 
-                window.location.href =
-                    "home.html";
+   		 window.location.href = "home.html";
 
             }
 
