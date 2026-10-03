@@ -944,7 +944,8 @@ document
             document.getElementById(
                 "longitude"
             ).value;
-
+ 	 	var photoData =
+   		  canvas.toDataURL("image/jpeg", 0.8);
 
         // =========================
         // VALIDATION
@@ -1042,7 +1043,7 @@ document
             encodeURIComponent(latitude) +
             "&longitude=" +
             encodeURIComponent(longitude);
-
+			
 
         fetch(url)
 
