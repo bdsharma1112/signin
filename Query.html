@@ -1,184 +1,665 @@
-// =================================
-// SEARCH
-// =================================
+<!DOCTYPE html>
+<html lang="en">
 
-if (action === "search") {
+<head>
 
-  var searchText =
-    String(e.parameter.search || "")
-    .trim()
-    .toLowerCase();
+    <meta charset="UTF-8">
 
-  var searchType =
-    String(e.parameter.searchType || "all")
-    .trim();
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Search - Ankit Telecommunication</title>
 
 
-  if (searchText === "") {
+    <style>
 
-    return sendJSON({
-      status: "error",
-      message: "Please enter search value"
-    });
+        /* ================================
+           BODY
+        ================================= */
 
-  }
-
-
-  var data =
-    sheet.getDataRange().getValues();
-
-  var records = [];
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #f2f2f2;
+            margin: 0;
+        }
 
 
-  // =================================
-  // COLUMN INDEX
-  // =================================
+        /* ================================
+           HEADER
+        ================================= */
 
-  var fieldIndex = {
-
-    fullName: 0,
-    fatherName: 1,
-    mobile: 2,
-    email: 3,
-    address: 4,
-    userId: 5
-
-  };
+        header {
+            background: #222;
+            color: white;
+            padding: 25px;
+        }
 
 
-  // =================================
-  // SEARCH DATA
-  // =================================
+        /* ================================
+           BUTTONS
+        ================================= */
 
-  for (var i = 1; i < data.length; i++) {
-
-    var match = false;
-
-
-    // ---------------------------------
-    // ALL FIELDS
-    // ---------------------------------
-
-    if (searchType === "all") {
-
-      for (var key in fieldIndex) {
-
-        var value =
-          String(
-            data[i][fieldIndex[key]] || ""
-          )
-          .trim()
-          .toLowerCase();
+        button {
+            color: blue;
+            background: yellow;
+            border: 1px solid blue;
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+        }
 
 
-        if (value.indexOf(searchText) !== -1) {
+        button:hover {
+            background: orange;
+        }
 
-          match = true;
 
-          break;
+        .search-button {
+            background: #ff9800;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+
+        .search-button:hover {
+            background: #e68900;
+        }
+
+
+        .close {
+            background: #ddd;
+            color: #333;
+        }
+
+
+        .close:hover {
+            background: #bbb;
+        }
+
+
+        /* ================================
+           SEARCH BOX
+        ================================= */
+
+        .search-box {
+
+            background: white;
+
+            padding: 20px;
+
+            margin: 20px auto;
+
+            width: 90%;
+
+            max-width: 900px;
+
+            border-radius: 8px;
+
+            box-shadow: 0 0 5px #aaa;
+
+            box-sizing: border-box;
+        }
+	select {
+  	  width: 70%;
+   	 padding: 12px;
+    	margin: 10px;
+  	  border: 1px solid #999;
+   	 border-radius: 5px;
+   	 font-size: 16px;
+   	 background: white;
+	}
+
+        .search-box input {
+
+            width: 70%;
+
+            padding: 12px;
+
+            border: 1px solid #999;
+
+            border-radius: 5px;
+
+            font-size: 15px;
+
+            box-sizing: border-box;
+        }
+
+
+        /* ================================
+           LOADING
+        ================================= */
+
+        .loading {
+
+            display: none;
+
+            text-align: center;
+
+            font-size: 20px;
+
+            padding: 30px;
+        }
+
+
+        .loader {
+
+            width: 40px;
+
+            height: 40px;
+
+            border: 5px solid #ddd;
+
+            border-top: 5px solid #2196F3;
+
+            border-radius: 50%;
+
+            margin: 10px auto;
+
+            animation: spin 1s linear infinite;
+        }
+
+
+        @keyframes spin {
+
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
 
         }
 
-      }
 
-    }
+        /* ================================
+           SEARCH RESULT
+        ================================= */
 
+        #searchResult {
 
-    // ---------------------------------
-    // SELECTED FIELD
-    // ---------------------------------
+            width: 95%;
 
-    else {
+            margin: 20px auto;
 
-      if (fieldIndex[searchType] === undefined) {
-
-        return sendJSON({
-          status: "error",
-          message: "Invalid Search Field"
-        });
-
-      }
+            overflow-x: auto;
+        }
 
 
-      var value =
-        String(
-          data[i][fieldIndex[searchType]] || ""
-        )
-        .trim()
-        .toLowerCase();
+        .result-title {
+
+            background: #2196F3;
+
+            color: white;
+
+            padding: 10px;
+
+            margin: 0;
+        }
 
 
-      if (value.indexOf(searchText) !== -1) {
+        /* ================================
+           TABLE
+        ================================= */
 
-        match = true;
+        table {
 
-      }
+            width: 100%;
 
-    }
+            border-collapse: collapse;
 
-
-    // =================================
-    // ADD RECORD
-    // =================================
-
-    if (match) {
-
-      records.push({
-
-        rowNumber: i + 1,
-
-        fullName:
-          String(data[i][0] || ""),
-
-        fatherName:
-          String(data[i][1] || ""),
-
-        mobile:
-          String(data[i][2] || ""),
-
-        email:
-          String(data[i][3] || ""),
-
-        address:
-          String(data[i][4] || ""),
-
-        userId:
-          String(data[i][5] || "")
-
-      });
-
-    }
-
-  }
+            background: white;
+        }
 
 
-  // =================================
-  // NO RECORD
-  // =================================
+        th {
 
-  if (records.length === 0) {
+            background: #333;
 
-    return sendJSON({
+            color: white;
 
-      status: "error",
+            padding: 12px;
 
-      message: "No Record Found"
+            border: 1px solid #ddd;
 
-    });
-
-  }
+            white-space: nowrap;
+        }
 
 
-  // =================================
-  // SUCCESS
-  // =================================
+        td {
 
-  return sendJSON({
+            padding: 10px;
 
-    status: "success",
+            border: 1px solid #ddd;
 
-    records: records
+            text-align: left;
+        }
 
-  });
 
-}
+        tr:nth-child(even) {
+
+            background: #f9f9f9;
+        }
+
+
+        tr:hover {
+
+            background: #eeeeee;
+        }
+
+
+        /* ================================
+           MOBILE
+        ================================= */
+
+        @media screen and (max-width: 700px) {
+
+            .search-box input {
+
+                width: 100%;
+
+                margin-bottom: 10px;
+            }
+
+
+            .search-button {
+
+                width: 100%;
+            }
+
+
+            th,
+            td {
+
+                padding: 8px;
+
+                font-size: 13px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- ================================
+         HEADER
+    ================================= -->
+
+    <header>
+
+        <h1>Ankit Telecommunication</h1>
+
+        <h2>Search User Record</h2>
+
+    </header>
+
+
+    <!-- ================================
+         SEARCH BOX
+    ================================= -->
+
+    <div class="search-box">
+
+       // <input
+            type="text"
+            id="searchText"
+            placeholder="Search Name, Mobile, Email, Address, User ID...">
+
+		<label>Select Search Field:</label>
+
+		<select id="searchField">
+   	 <option value="">-- Select Field --</option>
+   	 <option value="fullName">Full Name</option>
+   	 <option value="fatherName">Father Name</option>
+   	 <option value="mobile">Mobile</option>
+   	 <option value="email">Email</option>
+    	<option value="address">Address</option>
+   	 <option value="userId">User ID</option>
+	</select>
+
+        <button
+            type="button"
+            class="search-button"
+            onclick="searchData();">
+
+            SEARCH
+
+        </button>
+
+    </div>
+
+
+    <!-- ================================
+         LOADING
+    ================================= -->
+
+    <div id="loading" class="loading">
+
+        <div class="loader"></div>
+
+        Searching...
+
+    </div>
+
+
+    <!-- ================================
+         SEARCH RESULT
+    ================================= -->
+
+    <div id="searchResult"></div>
+
+
+    <!-- ================================
+         CLOSE BUTTON
+    ================================= -->
+
+    
+    <script>
+
+
+        // =================================
+        // GOOGLE APPS SCRIPT URL
+        // =================================
+
+        var SCRIPT_URL =
+        "https://script.google.com/macros/s/AKfycbzu8RI7S1XGlk3xIYpeAz1fvhHjLaTQsMx3_8ndCobvVsdGlRFV2SMHLmyIXOMAIYtJpA/exec";
+
+
+        // =================================
+        // SEARCH MULTIPLE FIELDS
+        // =================================
+
+        function searchData() {
+
+
+            var searchText =
+                document.getElementById("searchText")
+                .value
+                .trim();
+
+
+            // Empty search
+
+            if (searchText === "") {
+
+                alert("Please enter search value");
+
+                return;
+
+            }
+
+
+            // =================================
+            // SHOW LOADING
+            // =================================
+
+            document.getElementById("loading")
+                .style.display = "block";
+
+
+            document.getElementById("searchResult")
+                .innerHTML = "";
+
+
+            // =================================
+            // CREATE URL
+            // =================================
+
+            var url =
+                SCRIPT_URL +
+                "?action=search" +
+                "&search=" +
+                encodeURIComponent(searchText);
+
+
+            // =================================
+            // FETCH DATA
+            // =================================
+
+            fetch(url)
+
+                .then(function(response) {
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            "HTTP Error: " +
+                            response.status
+                        );
+
+                    }
+
+                    return response.json();
+
+                })
+
+
+                .then(function(data) {
+
+
+                    // Hide loading
+
+                    document.getElementById("loading")
+                        .style.display = "none";
+
+
+                    var result =
+                        document.getElementById("searchResult");
+
+
+                    // =================================
+                    // SUCCESS
+                    // =================================
+
+                    if (
+                        data.status === "success" &&
+                        data.records &&
+                        data.records.length > 0
+                    ) {
+
+
+                        var html = "";
+
+
+                        html +=
+                            "<h3 class='result-title'>" +
+                            "Search Result" +
+                            "</h3>";
+
+
+                        html += "<table>";
+
+
+                        html += "<thead>";
+
+                        html += "<tr>";
+
+                        html += "<th>User ID</th>";
+
+                        html += "<th>Full Name</th>";
+
+                        html += "<th>Father Name</th>";
+
+                        html += "<th>Mobile</th>";
+
+                        html += "<th>Email</th>";
+
+                        html += "<th>Address</th>";
+
+                        html += "</tr>";
+
+                        html += "</thead>";
+
+
+                        html += "<tbody>";
+
+
+                        // =================================
+                        // DISPLAY RECORDS
+                        // =================================
+
+                        data.records.forEach(function(row) {
+
+
+                            html += "<tr>";
+
+
+                            html +=
+                                "<td>" +
+                                escapeHTML(row.userId) +
+                                "</td>";
+
+
+                            html +=
+                                "<td>" +
+                                escapeHTML(row.fullName) +
+                                "</td>";
+
+
+                            html +=
+                                "<td>" +
+                                escapeHTML(row.fatherName) +
+                                "</td>";
+
+
+                            html +=
+                                "<td>" +
+                                escapeHTML(row.mobile) +
+                                "</td>";
+
+
+                            html +=
+                                "<td>" +
+                                escapeHTML(row.email) +
+                                "</td>";
+
+
+                            html +=
+                                "<td>" +
+                                escapeHTML(row.address) +
+                                "</td>";
+
+
+                            html += "</tr>";
+
+                        });
+
+
+                        html += "</tbody>";
+
+                        html += "</table>";
+
+
+                        result.innerHTML = html;
+
+                    }
+
+
+                    // =================================
+                    // NO RECORD
+                    // =================================
+
+                    else {
+
+                        result.innerHTML =
+                            "<h3>No Record Found</h3>";
+
+                    }
+
+                })
+
+
+                // =================================
+                // CONNECTION ERROR
+                // =================================
+
+                .catch(function(error) {
+
+
+                    document.getElementById("loading")
+                        .style.display = "none";
+
+
+                    console.log(error);
+
+
+                    document.getElementById("searchResult")
+                        .innerHTML =
+                        "<h3>Connection Error</h3>";
+
+                });
+
+        }
+
+
+        // =================================
+        // HTML SECURITY
+        // =================================
+
+        function escapeHTML(value) {
+
+            var div =
+                document.createElement("div");
+
+
+            div.textContent =
+                value == null ? "" : value;
+
+
+            return div.innerHTML;
+
+        }
+
+
+        // =================================
+        // ENTER KEY SEARCH
+        // =================================
+
+        document.getElementById("searchText")
+            .addEventListener(
+                "keydown",
+                function(event) {
+
+                    if (event.key === "Enter") {
+
+                        searchData();
+
+                    }
+
+                }
+            );
+
+    </script>
+
+
+
+
+<!-- ================================
+         CLOSE BUTTON
+    ================================= -->
+
+    <button
+        type="button"
+        class="close"
+        onclick="window.location.href='home.html'">
+
+        Close
+
+    </button>
+
+</body>
+
+</html>
+
