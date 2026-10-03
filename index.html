@@ -583,7 +583,7 @@ function loginUser() {
                 .style.display = "none";
 
 
-          f (data.status === "success") {
+          if (data.status === "success") {
 
     		sessionStorage.setItem("loginStatus", "success");
 
