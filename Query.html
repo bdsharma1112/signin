@@ -1047,37 +1047,22 @@ function populateSearchTypesOld(searchFields) {
     // Reset
     select.innerHTML = "";
 
-
-    // All
-    var allOption =
-        document.createElement("option");
-
-    allOption.value = "all";
-    allOption.textContent = "All";
-
-    select.appendChild(allOption);
-
-
-    // Fields returned by Apps Script
-    searchFields.forEach(function(field) {
-
-        var option =
-            document.createElement("option");
-
-        option.value = field.key;
-        option.textContent = field.label;
-
-        select.appendChild(option);
-
-    });
-    console.log(
-        "Dropdown populated:",
-        searchFields
-    );
-}
+    
+    }
 
 </script>
 
+    <script>
+
+	function logout() {
+
+    	sessionStorage.removeItem("loginStatus");
+
+    	window.location.href = "index.html";
+
+	}
+
+</script>
 </body>
 
 </html>
