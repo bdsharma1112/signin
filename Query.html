@@ -1,1069 +1,184 @@
-<!DOCTYPE html>
-<html lang="en">
+// =================================
+// SEARCH
+// =================================
 
-<head>
+if (action === "search") {
 
-    <meta charset="UTF-8">
+  var searchText =
+    String(e.parameter.search || "")
+    .trim()
+    .toLowerCase();
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+  var searchType =
+    String(e.parameter.searchType || "all")
+    .trim();
 
-    <title>Search - Ankit Telecommunication</title>
 
+  if (searchText === "") {
 
-    <style>
+    return sendJSON({
+      status: "error",
+      message: "Please enter search value"
+    });
 
-        /* ================================
-           BODY
-        ================================= */
+  }
 
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background: #f2f2f2;
-            margin: 0;
-        }
 
+  var data =
+    sheet.getDataRange().getValues();
 
-        /* ================================
-           HEADER
-        ================================= */
+  var records = [];
 
-        header {
-            background: #222;
-            color: white;
-            padding: 25px;
-        }
 
+  // =================================
+  // COLUMN INDEX
+  // =================================
 
-        /* ================================
-           BUTTONS
-        ================================= */
+  var fieldIndex = {
 
-        button {
-            color: blue;
-            background: yellow;
-            border: 1px solid blue;
-            padding: 10px 15px;
-            font-size: 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            margin: 5px;
-        }
+    fullName: 0,
+    fatherName: 1,
+    mobile: 2,
+    email: 3,
+    address: 4,
+    userId: 5
 
+  };
 
-        button:hover {
-            background: orange;
-        }
 
+  // =================================
+  // SEARCH DATA
+  // =================================
 
-        .search-button {
-            background: #ff9800;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 15px;
-        }
+  for (var i = 1; i < data.length; i++) {
 
+    var match = false;
 
-        .search-button:hover {
-            background: #e68900;
-        }
 
-         .refresh {
-            background: #ddd;
-            color: #333;
-        }
+    // ---------------------------------
+    // ALL FIELDS
+    // ---------------------------------
 
+    if (searchType === "all") {
 
-        .refresh:hover {
-            background: #bbb;
-        }
+      for (var key in fieldIndex) {
 
-        .close {
-            background: #ddd;
-            color: #333;
-        }
+        var value =
+          String(
+            data[i][fieldIndex[key]] || ""
+          )
+          .trim()
+          .toLowerCase();
 
 
-        .close:hover {
-            background: #bbb;
-        }
+        if (value.indexOf(searchText) !== -1) {
 
+          match = true;
 
-        /* ================================
-           SEARCH BOX
-        ================================= */
-
-        .search-box {
-
-            background: white;
-
-            padding: 20px;
-
-            margin: 20px auto;
-
-            width: 90%;
-
-            max-width: 900px;
-
-            border-radius: 8px;
-
-            box-shadow: 0 0 5px #aaa;
-
-            box-sizing: border-box;
-        }
-
-
-        .search-box input {
-
-            width: 70%;
-
-            padding: 12px;
-
-            border: 1px solid #999;
-
-            border-radius: 5px;
-
-            font-size: 15px;
-
-            box-sizing: border-box;
-        }
-
-
-        /* ================================
-           LOADING
-        ================================= */
-
-        .loading {
-
-            display: none;
-
-            text-align: center;
-
-            font-size: 20px;
-
-            padding: 30px;
-        }
-
-
-        .loader {
-
-            width: 40px;
-
-            height: 40px;
-
-            border: 5px solid #ddd;
-
-            border-top: 5px solid #2196F3;
-
-            border-radius: 50%;
-
-            margin: 10px auto;
-
-            animation: spin 1s linear infinite;
-        }
-
-
-        @keyframes spin {
-
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
+          break;
 
         }
 
+      }
 
-        /* ================================
-           SEARCH RESULT
-        ================================= */
-
-        #searchResult {
-
-            width: 95%;
-
-            margin: 20px auto;
-
-            overflow-x: auto;
-        }
-
-
-        .result-title {
-
-            background: #2196F3;
-
-            color: white;
-
-            padding: 10px;
-
-            margin: 0;
-        }
-
-
-        /* ================================
-           TABLE
-        ================================= */
-
-        table {
-
-            width: 100%;
-
-            border-collapse: collapse;
-
-            background: white;
-        }
-
-
-        th {
-
-            background: #333;
-
-            color: white;
-
-            padding: 12px;
-
-            border: 1px solid #ddd;
-
-            white-space: nowrap;
-        }
-
-
-        td {
-
-            padding: 10px;
-
-            border: 1px solid #ddd;
-
-            text-align: left;
-        }
-
-
-        tr:nth-child(even) {
-
-            background: #f9f9f9;
-        }
-
-
-        tr:hover {
-
-            background: #eeeeee;
-        }
-
-
-        /* ================================
-           MOBILE
-        ================================= */
-
-        @media screen and (max-width: 700px) {
-
-            .search-box input {
-
-                width: 100%;
-
-                margin-bottom: 10px;
-            }
-
-
-            .search-button {
-
-                width: 100%;
-            }
-
-
-            th,
-            td {
-
-                padding: 8px;
-
-                font-size: 13px;
-            }
-
-        }
-
-    </style>
-
-</head>
-
-
-<body>
-
-
-    <!-- ================================
-         HEADER
-    ================================= -->
-
-    <header>
-
-        <h1>Ankit Telecommunication</h1>
-
-        <h2>Search User Record</h2>
-
-    </header>
-
-
-    <!-- ================================
-         SEARCH BOX
-    ================================= -->
-
-    <!-- <div class="search-box">
-
-        <input
-            type="text"
-            id="searchText"
-            placeholder="Search Name, Mobile, Email, Address, User ID...">
-
-
-        <button
-            type="button"
-            class="search-button"
-            onclick="searchData();">
-
-            SEARCH
-
-        </button>
-
-    </div> -->
-
-<div class="search-box">
-
-    <select id="searchType">
-    <option value="all">All</option>
-   </select>
-
-    <input
-        type="text"
-        id="searchText"
-        placeholder="Search...">
-
-    <button
-        type="button"
-        class="search-button"
-        onclick="searchData()">
-
-        SEARCH
-
-    </button>
-
-     <!-- ================================
-         REFRESH BUTTON
-    ================================= -->
-
-    <button
-        type="button"
-        class="Refresh"
-        onclick="window.location.href='Query.html'">
-
-       REFRESH
-
-    </button>
-
-    <!-- ================================
-         CLOSE BUTTON
-    ================================= -->
-
-    <button
-        type="button"
-        class="close"
-        onclick="window.location.href='home.html'">
-
-        Close
-
-    </button>
-
-
-</div>
-
-
-    <!-- ================================
-         LOADING
-    ================================= -->
-
-    <div id="loading" class="loading">
-
-        <div class="loader"></div>
-
-        Searching...
-
-    </div>
-
-
-    <!-- ================================
-         SEARCH RESULT
-    ================================= -->
-
-    <div id="searchResult"></div>
-
-  
-    <script>
-
-
-        // =================================
-        // GOOGLE APPS SCRIPT URL
-        // =================================
-
-        var SCRIPT_URL =
-        const SCRIPT_URL =
-        "https://script.google.com/macros/s/AKfycbwcegNrOYLleArW4cDwYeOkidMZQx4ZDr6cIParJeb2Ku0Gq-WGW_2pGsae7OUTANk4Kg/exec";
-
-
-        // =================================
-        // SEARCH MULTIPLE / SELECTED FIELD
-        // =================================
-
-        function searchData() {
-
-            var searchText =
-                document.getElementById("searchText")
-                .value
-                .trim();
-
-
-            var searchType =
-                document.getElementById("searchType")
-                .value;
-
-
-            // =================================
-            // EMPTY SEARCH
-            // =================================
-
-            if (searchText === "") {
-
-                alert("Please enter search value");
-
-                return;
-
-            }
-
-
-            // =================================
-            // SHOW LOADING
-            // =================================
-
-            document.getElementById("loading")
-                .style.display = "block";
-
-
-            document.getElementById("searchResult")
-                .innerHTML = "";
-
-
-            // =================================
-            // CREATE URL
-            // =================================
-
-            var url =
-                SCRIPT_URL +
-                "?action=search" +
-                "&search=" +
-                encodeURIComponent(searchText) +
-                "&searchType=" +
-                encodeURIComponent(searchType);
-
-
-            // =================================
-            // FETCH DATA
-            // =================================
-
-            fetch(url)
-
-                .then(function(response) {
-
-                    if (!response.ok) {
-
-                        throw new Error(
-                            "HTTP Error: " +
-                            response.status
-                        );
-
-                    }
-
-                    return response.json();
-
-                })
-
-
-                .then(function(data) {
-
-                    // =================================
-                    // HIDE LOADING
-                    // =================================
-
-                    document.getElementById("loading")
-                        .style.display = "none";
-
-
-                    var result =
-                        document.getElementById("searchResult");
-
-
-                    // =================================
-                    // SUCCESS
-                    // =================================
-
-                    if (
-                        data.status === "success" &&
-                        data.records &&
-                        data.records.length > 0
-                    ) {
-
-                        var html = "";
-
-
-                        // =================================
-                        // RESULT TITLE
-                        // =================================
-
-                        html +=
-                            "<h3 class='result-title'>" +
-                            "Search Result (" +
-                            data.records.length +
-                            ")" +
-                            "</h3>";
-
-
-                        // =================================
-                        // TABLE
-                        // =================================
-
-                        html += "<table>";
-
-
-                        html += "<thead>";
-
-                        html += "<tr>";
-
-                        html += "<th>User ID</th>";
-
-                        html += "<th>Full Name</th>";
-
-                        html += "<th>Father Name</th>";
-
-                        html += "<th>Mobile</th>";
-
-                        html += "<th>Email</th>";
-
-                        html += "<th>Address</th>";
-
-                        html += "</tr>";
-
-                        html += "</thead>";
-
-
-                        html += "<tbody>";
-
-
-                        // =================================
-                        // DISPLAY RECORDS
-                        // =================================
-
-                        data.records.forEach(function(row) {
-
-                            html += "<tr>";
-
-
-                            html +=
-                                "<td>" +
-                                escapeHTML(row.userId) +
-                                "</td>";
-
-
-                            html +=
-                                "<td>" +
-                                escapeHTML(row.fullName) +
-                                "</td>";
-
-
-                            html +=
-                                "<td>" +
-                                escapeHTML(row.fatherName) +
-                                "</td>";
-
-
-                            html +=
-                                "<td>" +
-                                escapeHTML(row.mobile) +
-                                "</td>";
-
-
-                            html +=
-                                "<td>" +
-                                escapeHTML(row.email) +
-                                "</td>";
-
-
-                            html +=
-                                "<td>" +
-                                escapeHTML(row.address) +
-                                "</td>";
-
-
-                            html += "</tr>";
-
-                        });
-
-
-                        html += "</tbody>";
-
-                        html += "</table>";
-
-
-                        result.innerHTML = html;
-
-                    }
-
-
-                    // =================================
-                    // NO RECORD
-                    // =================================
-
-                    else {
-
-                        result.innerHTML =
-                            "<h3>No Record Found</h3>";
-
-                    }
-
-                })
-
-
-                // =================================
-                // CONNECTION ERROR
-                // =================================
-
-                .catch(function(error) {
-
-                    document.getElementById("loading")
-                        .style.display = "none";
-
-
-                    console.log(error);
-
-
-                    document.getElementById("searchResult")
-                        .innerHTML =
-                        "<h3>Connection Error</h3>";
-
-                });
-
-        }
-
-
-        // =================================
-        // HTML SECURITY
-        // =================================
-
-        function escapeHTML(value) {
-
-            var div =
-                document.createElement("div");
-
-
-            div.textContent =
-                value == null ? "" : value;
-
-
-            return div.innerHTML;
-
-        }
-
-
-        // =================================
-        // ENTER KEY SEARCH
-        // =================================
-
-        document.getElementById("searchText")
-            .addEventListener(
-                "keydown",
-                function(event) {
-
-                    if (event.key === "Enter") {
-
-                        searchData();
-
-                    }
-
-                }
-            );
-
-        // =================================
-        // SEARCH MULTIPLE FIELDS
-        // =================================
-
-        function searchDataX() {
-
-
-            var searchText =
-                document.getElementById("searchText")
-                .value
-                .trim();
-
-
-            // Empty search
-
-            if (searchText === "") {
-
-                alert("Please enter search value");
-
-                return;
-
-            }
-
-
-            // =================================
-            // SHOW LOADING
-            // =================================
-
-            document.getElementById("loading")
-                .style.display = "block";
-
-
-            document.getElementById("searchResult")
-                .innerHTML = "";
-
-
-            // =================================
-            // CREATE URL
-            // =================================
-
-            var url =
-                SCRIPT_URL +
-                "?action=search" +
-                "&search=" +
-                encodeURIComponent(searchText);
-
-
-            // =================================
-            // FETCH DATA
-            // =================================
-
-            fetch(url)
-
-                .then(function(response) {
-
-                    if (!response.ok) {
-
-                        throw new Error(
-                            "HTTP Error: " +
-                            response.status
-                        );
-
-                    }
-
-                    return response.json();
-
-                })
-
-
-                .then(function(data) {
-
-
-                    // Hide loading
-
-                    document.getElementById("loading")
-                        .style.display = "none";
-
-
-                    var result =
-                        document.getElementById("searchResult");
-
-
-                    // =================================
-                    // SUCCESS
-                    // =================================
-
-                    if (
-                        data.status === "success" &&
-                        data.records &&
-                        data.records.length > 0
-                    ) {
-
-
-                        var html = "";
-
-
-                        html +=
-                            "<h3 class='result-title'>" +
-                            "Search Result" +
-                            "</h3>";
-
-
-                        html += "<table>";
-
-
-                        html += "<thead>";
-
-                        html += "<tr>";
-
-                        html += "<th>User ID</th>";
-
-                        html += "<th>Full Name</th>";
-
-                        html += "<th>Father Name</th>";
-
-                        html += "<th>Mobile</th>";
-
-                        html += "<th>Email</th>";
-
-                        html += "<th>Address</th>";
-
-                        html += "</tr>";
-
-                        html += "</thead>";
-
-
-                        html += "<tbody>";
-
-
-                        // =================================
-                        // DISPLAY RECORDS
-                        // =================================
-
-                        data.records.forEach(function(row) {
-
-
-                            html += "<tr>";
-
-
-                            html +=
-                                "<td>" +
-                                escapeHTML(row.userId) +
-                                "</td>";
-
-
-                            html +=
-                                "<td>" +
-                                escapeHTML(row.fullName) +
-                                "</td>";
-
-
-                            html +=
-                                "<td>" +
-                                escapeHTML(row.fatherName) +
-                                "</td>";
-
-
-                            html +=
-                                "<td>" +
-                                escapeHTML(row.mobile) +
-                                "</td>";
-
-
-                            html +=
-                                "<td>" +
-                                escapeHTML(row.email) +
-                                "</td>";
-
-
-                            html +=
-                                "<td>" +
-                                escapeHTML(row.address) +
-                                "</td>";
-
-
-                            html += "</tr>";
-
-                        });
-
-
-                        html += "</tbody>";
-
-                        html += "</table>";
-
-
-                        result.innerHTML = html;
-
-                    }
-
-
-                    // =================================
-                    // NO RECORD
-                    // =================================
-
-                    else {
-
-                        result.innerHTML =
-                            "<h3>No Record Found</h3>";
-
-                    }
-
-                })
-
-
-                // =================================
-                // CONNECTION ERROR
-                // =================================
-
-                .catch(function(error) {
-
-
-                    document.getElementById("loading")
-                        .style.display = "none";
-
-
-                    console.log(error);
-
-
-                    document.getElementById("searchResult")
-                        .innerHTML =
-                        "<h3>Connection Error</h3>";
-
-                });
-
-        }
-
-
-        // =================================
-        // HTML SECURITY
-        // =================================
-
-        function escapeHTML(value) {
-
-            var div =
-                document.createElement("div");
-
-
-            div.textContent =
-                value == null ? "" : value;
-
-
-            return div.innerHTML;
-
-        }
-
-
-        // =================================
-        // ENTER KEY SEARCH
-        // =================================
-
-        document.getElementById("searchText")
-            .addEventListener(
-                "keydown",
-                function(event) {
-
-                    if (event.key === "Enter") {
-
-                        searchData();
-
-                    }
-
-                }
-            );
-
-    </script>
-<script>
-    function populateSearchTypes() {
-
-    var select =
-        document.getElementById("searchType");
-
-    if (!select) {
-        console.error("searchType not found");
-        return;
     }
 
 
-    // Clear dropdown
-    select.innerHTML = "";
+    // ---------------------------------
+    // SELECTED FIELD
+    // ---------------------------------
+
+    else {
+
+      if (fieldIndex[searchType] === undefined) {
+
+        return sendJSON({
+          status: "error",
+          message: "Invalid Search Field"
+        });
+
+      }
+
+
+      var value =
+        String(
+          data[i][fieldIndex[searchType]] || ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+      if (value.indexOf(searchText) !== -1) {
+
+        match = true;
+
+      }
+
+    }
 
 
     // =================================
-    // SEARCH OPTIONS
+    // ADD RECORD
     // =================================
 
-    var fields = [
+    if (match) {
 
-        {
-            value: "all",
-            label: "All"
-        },
+      records.push({
 
-        {
-            value: "fullName",
-            label: "Name"
-        },
+        rowNumber: i + 1,
 
-        {
-            value: "fatherName",
-            label: "Father Name"
-        },
+        fullName:
+          String(data[i][0] || ""),
 
-        {
-            value: "mobile",
-            label: "Mobile"
-        },
+        fatherName:
+          String(data[i][1] || ""),
 
-        {
-            value: "email",
-            label: "Email"
-        },
+        mobile:
+          String(data[i][2] || ""),
 
-        {
-            value: "address",
-            label: "Address"
-        },
+        email:
+          String(data[i][3] || ""),
 
-        {
-            value: "userId",
-            label: "User ID"
-        }
+        address:
+          String(data[i][4] || ""),
 
-    ];
+        userId:
+          String(data[i][5] || "")
+
+      });
+
+    }
+
+  }
 
 
-    // =================================
-    // ADD OPTIONS
-    // =================================
+  // =================================
+  // NO RECORD
+  // =================================
 
-    fields.forEach(function(field) {
+  if (records.length === 0) {
 
-        var option =
-            document.createElement("option");
+    return sendJSON({
 
-        option.value = field.value;
+      status: "error",
 
-        option.textContent = field.label;
-
-        select.appendChild(option);
+      message: "No Record Found"
 
     });
 
+  }
 
-    console.log("Search options added");
+
+  // =================================
+  // SUCCESS
+  // =================================
+
+  return sendJSON({
+
+    status: "success",
+
+    records: records
+
+  });
 
 }
-
-function populateSearchTypesOld(searchFields) {
-
-    var select =
-        document.getElementById("searchType");
-
-    // Reset
-    select.innerHTML = "";
-
-    
-    }
-
-</script>
-
-    <script>
-
-	function logout() {
-
-    	sessionStorage.removeItem("loginStatus");
-
-    	window.location.href = "index.html";
-
-	}
-
-</script>
-</body>
-
-</html>
-
