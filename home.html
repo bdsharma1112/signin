@@ -138,7 +138,20 @@
             BACK TO LOGIN
 
         </button>
+		
+	<button onclick="logout()">LOGOUT</button>
 
+  <script>
+
+	function logout() {
+
+    	sessionStorage.removeItem("loginStatus");
+
+    	window.location.href = "index.html";
+
+	}
+
+</script>
      
 </body>
 
