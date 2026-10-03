@@ -11,7 +11,7 @@
 
     <title>Ankit Telecommunication</title>
 
-
+		
     <style>
 
         body {
@@ -28,18 +28,19 @@
             padding: 30px;
         }
 
-
-        .form-box {
-            background: white;
+	.form-box { ;
+            background: pink;
             width: 350px;
             margin: 30px auto;
             padding: 25px;
-            border-radius: 10px;
+            border-radius: 50px;
             box-shadow: 0 0 10px #aaa;
+	    text-align: left;
         }
 
+        
 
-        label {
+       label {
             display: block;
             text-align: left;
             margin-top: 15px;
@@ -79,11 +80,53 @@
             color: black;
         }
 
+	/* BUTTONS */
+
+        .back-button,
+        .report-button,
+        .search-button, 
+	.logout-button { 
+
+            margin: 10px 5px;
+
+            padding: 10px 20px;
+
+            color: white;
+
+            border: none;
+
+            border-radius: 5px;
+
+            cursor: pointer;
+
+            font-size: 15px;
+        }
+
+
+        .back-button {
+            background: #2196F3;
+        }
+
+
+        .report-button {
+            background: green;
+        }
+
+
+        .search-button {
+            background: #ff9800;
+        }
+
+	.logout-button {
+            background: red;
+	   font-size: 10px
+        }
+
+       
+
     </style>
 
-</head>
-
- <script>
+    <script>
 
 	if (sessionStorage.getItem("loginStatus") !== "success") {
 
@@ -92,6 +135,10 @@
 	}
 
 	</script>
+ 
+</head>
+
+
 <body>
 
 
@@ -112,10 +159,15 @@
 
     <div class="form-box">
 
-        <h2>Reports</h2>
+      <h2>Home</h2>
 
 
-        
+	<button onclick="window.location.href='KYC.html'">KYC</button> <br>
+
+	<button onclick="window.location.href='Query.html'">Query</button> <br>
+	
+	<button onclick="window.location.href='Report.html'">Report</button> <br>	
+	        
         <button
             type="button"
             class="report"
@@ -138,9 +190,13 @@
             BACK TO LOGIN
 
         </button>
-		
-	<button onclick="logout()">LOGOUT</button>
 
+	<br>
+	
+	<button onclick="logout()">LOGOUT4</button> <br>
+
+	<button onclick="logout()">LOGOUT</button>
+	
   <script>
 
 	function logout() {
@@ -152,6 +208,8 @@
 	}
 
 </script>
+   
+
      
 </body>
 
