@@ -636,7 +636,7 @@ BACK
 // =================================
 
 const SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbzyqcXBiN4S9WAxWqwycjw-fnfyEzcEuqXxuj5-fgexHkU4T2YUQfMXz8JlkTnMzL7ZAg/exec";
+"https://script.google.com/macros/s/AKfycbxgjIRrbVeVvaGOe_2Ot3jwYM-2YLxeDaZUhNbDx70OFjybtt5a44VtPr815Ie4xDDhGg/exec";
 
 
 // =================================
@@ -1287,8 +1287,29 @@ document
         // SEND TO GOOGLE APPS SCRIPT
         // =================================
 
-        fetch(
-            SCRIPT_URL,
+      fetch(SCRIPT_URL, {
+    method: "POST",
+    headers: {
+        "Content-Type":
+            "application/x-www-form-urlencoded;charset=UTF-8"
+    },
+    body: formData.toString()
+})
+.then(function(response) {
+    return response.text();
+})
+.then(function(text) {
+
+    console.log("Server Response:", text);
+
+    var data = JSON.parse(text);
+
+    // आगे success/error handling
+});
+
+          
+       // fetch(
+           // SCRIPT_URL,
             {
                 method: "POST",
                 body: formData
@@ -1296,7 +1317,7 @@ document
         )
 
 
-        .then(function(response) {
+      //  .then(function(response) {
 
             if (!response.ok) {
 
@@ -1312,7 +1333,7 @@ document
         })
 
 
-        .then(function(data) {
+      //  .then(function(data) {
 
             document.getElementById(
                 "loading"
