@@ -9,7 +9,7 @@
 <meta name="viewport"
       content="width=device-width, initial-scale=1.0">
 
-<title>Data Collection Form</title>
+<title>KYC Data Collection Form</title>
 
 <style>
 
@@ -92,7 +92,9 @@ textarea {
     color: red;
 }
 
-/* LOCATION */
+/* =========================
+   LOCATION
+========================= */
 
 .location-section {
     background: white;
@@ -121,7 +123,9 @@ textarea {
     line-height: 1.7;
 }
 
-/* PHOTO */
+/* =========================
+   PHOTO
+========================= */
 
 .photo-section {
     text-align: center;
@@ -141,6 +145,7 @@ textarea {
     object-fit: cover;
     border-radius: 10px;
     margin: 15px auto;
+    border: 2px solid #2196F3;
 }
 
 .buttons {
@@ -233,9 +238,7 @@ button:hover {
 
 <p>Data Collection Form</p>
 
-<p>
-please submit kyc
-</p>
+<p>Please Submit KYC</p>
 
 </header>
 
@@ -346,6 +349,7 @@ Mobile Number <span class="required">*</span>
 type="tel"
 id="mobile"
 maxlength="10"
+inputmode="numeric"
 placeholder="Enter 10 Digit Mobile Number"
 required>
 
@@ -410,6 +414,7 @@ placeholder="Enter District">
 type="text"
 id="pincode"
 maxlength="6"
+inputmode="numeric"
 placeholder="Enter PIN Code">
 
 </div>
@@ -470,8 +475,9 @@ Capture Photo
 </h2>
 
 <label>
-Applicant Photo
+Applicant Photo <span class="required">*</span>
 </label>
+
 
 <video
 id="camera"
@@ -480,16 +486,20 @@ playsinline
 style="display:none;">
 </video>
 
+
 <canvas
 id="photoCanvas"
 style="display:none;">
 </canvas>
 
+
 <img
 id="photoPreview"
 alt="Photo Preview">
 
+
 <br>
+
 
 <button
 type="button"
@@ -501,7 +511,9 @@ title="Open Camera">
 
 </button>
 
+
 <br>
+
 
 <button
 type="button"
@@ -511,6 +523,7 @@ onclick="capturePhoto()">
 CAPTURE PHOTO
 
 </button>
+
 
 <button
 type="button"
@@ -543,6 +556,7 @@ onclick="getLocation()">
 
 </button>
 
+
 <p
 id="locationStatus"
 class="location-status">
@@ -551,9 +565,11 @@ Location not captured
 
 </p>
 
+
 <input
 type="hidden"
 id="latitude">
+
 
 <input
 type="hidden"
@@ -563,7 +579,9 @@ id="longitude">
 
 
 <div id="loading" class="loading">
+
 ⏳ Submitting data...
+
 </div>
 
 
@@ -622,29 +640,48 @@ const SCRIPT_URL =
 
 
 // =================================
-// CAMERA
+// GLOBAL VARIABLES
 // =================================
 
 var cameraStream = null;
 
+var photoData = "";
+
+
+// =================================
+// START CAMERA
+// =================================
 
 function startCamera() {
 
-    var camera = document.getElementById("camera");
+    var camera =
+        document.getElementById("camera");
 
-    if (!navigator.mediaDevices ||
-        !navigator.mediaDevices.getUserMedia) {
 
-        alert("Camera is not supported in this browser.");
+    if (
+        !navigator.mediaDevices ||
+        !navigator.mediaDevices.getUserMedia
+    ) {
+
+        alert(
+            "Camera is not supported in this browser."
+        );
+
         return;
+
     }
 
+
     navigator.mediaDevices.getUserMedia({
+
         video: {
             facingMode: "user"
         },
+
         audio: false
+
     })
+
 
     .then(function(stream) {
 
@@ -655,6 +692,7 @@ function startCamera() {
         camera.style.display = "block";
 
     })
+
 
     .catch(function(error) {
 
@@ -669,13 +707,19 @@ function startCamera() {
 }
 
 
+// =================================
+// CAPTURE PHOTO
+// =================================
+
 function capturePhoto() {
 
     var camera =
         document.getElementById("camera");
 
+
     var canvas =
         document.getElementById("photoCanvas");
+
 
     var preview =
         document.getElementById("photoPreview");
@@ -683,17 +727,39 @@ function capturePhoto() {
 
     if (!cameraStream) {
 
-        alert("Please open camera first.");
+        alert(
+            "Please open camera first."
+        );
 
         return;
 
     }
 
 
-    canvas.width = camera.videoWidth;
+    if (
+        camera.videoWidth === 0 ||
+        camera.videoHeight === 0
+    ) {
 
-    canvas.height = camera.videoHeight;
+        alert(
+            "Camera is not ready. Please wait."
+        );
 
+        return;
+
+    }
+
+
+    // Set canvas size
+
+    canvas.width =
+        camera.videoWidth;
+
+    canvas.height =
+        camera.videoHeight;
+
+
+    // Draw camera image
 
     var context =
         canvas.getContext("2d");
@@ -708,24 +774,53 @@ function capturePhoto() {
     );
 
 
-    var photoData =
+    // =================================
+    // CONVERT TO BASE64
+    // =================================
+
+    photoData =
         canvas.toDataURL(
             "image/jpeg",
             0.8
         );
 
 
-    preview.src = photoData;
+    // =================================
+    // SHOW PREVIEW
+    // =================================
 
-    preview.style.display = "block";
+    preview.src =
+        photoData;
 
-    camera.style.display = "none";
+
+    preview.style.display =
+        "block";
+
+
+    camera.style.display =
+        "none";
 
 
     stopCamera();
 
+
+    document.getElementById(
+        "message"
+    ).innerHTML =
+        "✓ Photo captured successfully";
+
+
+    document.getElementById(
+        "message"
+    ).style.color =
+        "green";
+
 }
 
+
+// =================================
+// STOP CAMERA
+// =================================
 
 function stopCamera() {
 
@@ -746,11 +841,23 @@ function stopCamera() {
 }
 
 
+// =================================
+// RETAKE PHOTO
+// =================================
+
 function retakePhoto() {
+
+    photoData = "";
 
     document.getElementById(
         "photoPreview"
     ).style.display = "none";
+
+
+    document.getElementById(
+        "message"
+    ).innerHTML = "";
+
 
     startCamera();
 
@@ -758,7 +865,7 @@ function retakePhoto() {
 
 
 // =================================
-// GET GPS LOCATION
+// GET CURRENT LOCATION
 // =================================
 
 function getLocation() {
@@ -790,25 +897,31 @@ function getLocation() {
             var latitude =
                 position.coords.latitude;
 
+
             var longitude =
                 position.coords.longitude;
 
 
             document.getElementById(
                 "latitude"
-            ).value = latitude;
+            ).value =
+                latitude;
 
 
             document.getElementById(
                 "longitude"
-            ).value = longitude;
+            ).value =
+                longitude;
 
 
             status.innerHTML =
                 "✓ Location Captured<br>" +
+
                 "Latitude: " +
                 latitude.toFixed(6) +
+
                 "<br>" +
+
                 "Longitude: " +
                 longitude.toFixed(6);
 
@@ -823,12 +936,14 @@ function getLocation() {
                     "❌ Location permission denied";
 
             }
+
             else if (error.code === 2) {
 
                 status.innerHTML =
                     "❌ Location unavailable";
 
             }
+
             else {
 
                 status.innerHTML =
@@ -839,9 +954,13 @@ function getLocation() {
         },
 
         {
+
             enableHighAccuracy: true,
+
             timeout: 15000,
+
             maximumAge: 0
+
         }
 
     );
@@ -861,6 +980,10 @@ document
 
         event.preventDefault();
 
+
+        // =================================
+        // GET FORM VALUES
+        // =================================
 
         var fullName =
             document.getElementById(
@@ -944,17 +1067,18 @@ document
             document.getElementById(
                 "longitude"
             ).value;
- 	 	var photoData =
-   		  canvas.toDataURL("image/jpeg", 0.8);
-	}
 
-        // =========================
+
+        // =================================
         // VALIDATION
-        // =========================
+        // =================================
 
         if (fullName === "") {
 
-            alert("Please enter Full Name");
+            alert(
+                "Please enter Full Name"
+            );
+
             return;
 
         }
@@ -962,7 +1086,10 @@ document
 
         if (fatherName === "") {
 
-            alert("Please enter Father Name");
+            alert(
+                "Please enter Father Name"
+            );
+
             return;
 
         }
@@ -970,13 +1097,16 @@ document
 
         if (mobile === "") {
 
-            alert("Please enter Mobile Number");
+            alert(
+                "Please enter Mobile Number"
+            );
+
             return;
 
         }
 
 
-        if (mobile.length !== 10) {
+        if (!/^[0-9]{10}$/.test(mobile)) {
 
             alert(
                 "Please enter valid 10 digit mobile number"
@@ -989,19 +1119,56 @@ document
 
         if (address === "") {
 
-            alert("Please enter Address");
+            alert(
+                "Please enter Address"
+            );
+
             return;
 
         }
 
 
-        // =========================
-        // LOADING
-        // =========================
+        // =================================
+        // PHOTO VALIDATION
+        // =================================
+
+        if (photoData === "") {
+
+            alert(
+                "Please capture applicant photo"
+            );
+
+            return;
+
+        }
+
+
+        // =================================
+        // LOCATION VALIDATION
+        // =================================
+
+        if (
+            latitude === "" ||
+            longitude === ""
+        ) {
+
+            alert(
+                "Please capture current location"
+            );
+
+            return;
+
+        }
+
+
+        // =================================
+        // SHOW LOADING
+        // =================================
 
         document.getElementById(
             "loading"
-        ).style.display = "block";
+        ).style.display =
+            "block";
 
 
         document.getElementById(
@@ -1009,74 +1176,207 @@ document
         ).innerHTML = "";
 
 
-        // =========================
-        // SEND DATA
-        // =========================
+        // =================================
+        // CREATE FORM DATA
+        // =================================
 
-        var url =
-            SCRIPT_URL +
-            "?action=saveData" +
-            "&fullName=" +
-            encodeURIComponent(fullName) +
-            "&fatherName=" +
-            encodeURIComponent(fatherName) +
-            "&dob=" +
-            encodeURIComponent(dob) +
-            "&gender=" +
-            encodeURIComponent(gender) +
-            "&mobile=" +
-            encodeURIComponent(mobile) +
-            "&email=" +
-            encodeURIComponent(email) +
-            "&address=" +
-            encodeURIComponent(address) +
-            "&city=" +
-            encodeURIComponent(city) +
-            "&district=" +
-            encodeURIComponent(district) +
-            "&pincode=" +
-            encodeURIComponent(pincode) +
-            "&occupation=" +
-            encodeURIComponent(occupation) +
-            "&remarks=" +
-            encodeURIComponent(remarks) +
-            "&latitude=" +
-            encodeURIComponent(latitude) +
-            "&longitude=" +
-            encodeURIComponent(longitude);
-			
+        var formData =
+            new URLSearchParams();
 
-        fetch(url)
+
+        formData.append(
+            "action",
+            "saveData"
+        );
+
+
+        formData.append(
+            "fullName",
+            fullName
+        );
+
+
+        formData.append(
+            "fatherName",
+            fatherName
+        );
+
+
+        formData.append(
+            "dob",
+            dob
+        );
+
+
+        formData.append(
+            "gender",
+            gender
+        );
+
+
+        formData.append(
+            "mobile",
+            mobile
+        );
+
+
+        formData.append(
+            "email",
+            email
+        );
+
+
+        formData.append(
+            "address",
+            address
+        );
+
+
+        formData.append(
+            "city",
+            city
+        );
+
+
+        formData.append(
+            "district",
+            district
+        );
+
+
+        formData.append(
+            "pincode",
+            pincode
+        );
+
+
+        formData.append(
+            "occupation",
+            occupation
+        );
+
+
+        formData.append(
+            "remarks",
+            remarks
+        );
+
+
+        formData.append(
+            "latitude",
+            latitude
+        );
+
+
+        formData.append(
+            "longitude",
+            longitude
+        );
+
+
+        // IMPORTANT:
+        // PHOTO BASE64 DATA
+
+        formData.append(
+            "photoData",
+            photoData
+        );
+
+
+        // =================================
+        // SEND TO GOOGLE APPS SCRIPT
+        // =================================
+
+        fetch(
+            SCRIPT_URL,
+            {
+                method: "POST",
+                body: formData
+            }
+        )
+
 
         .then(function(response) {
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "HTTP Error: " +
+                    response.status
+                );
+
+            }
 
             return response.json();
 
         })
 
+
         .then(function(data) {
 
             document.getElementById(
                 "loading"
-            ).style.display = "none";
+            ).style.display =
+                "none";
 
 
-            if (data.status === "success") {
+            // =================================
+            // SUCCESS
+            // =================================
+
+            if (
+                data.status === "success"
+            ) {
 
                 document.getElementById(
                     "message"
                 ).innerHTML =
-                    "✓ Data submitted successfully.";
+                    "✓ Data, Location & Photo Saved Successfully";
+
 
                 document.getElementById(
                     "message"
-                ).style.color = "green";
+                ).style.color =
+                    "green";
 
+
+                // Reset form
 
                 document
                 .getElementById("dataForm")
                 .reset();
 
+
+                // Clear photo
+
+                photoData = "";
+
+
+                document.getElementById(
+                    "photoPreview"
+                ).src = "";
+
+
+                document.getElementById(
+                    "photoPreview"
+                ).style.display =
+                    "none";
+
+
+                // Clear canvas
+
+                var canvas =
+                    document.getElementById(
+                        "photoCanvas"
+                    );
+
+
+                canvas.width = 0;
+
+                canvas.height = 0;
+
+
+                // Clear GPS
 
                 document.getElementById(
                     "latitude"
@@ -1094,11 +1394,23 @@ document
                     "Location not captured";
 
 
+                // Stop camera
+
+                stopCamera();
+
+
                 document.getElementById(
-                    "photoPreview"
-                ).style.display = "none";
+                    "camera"
+                ).style.display =
+                    "none";
 
             }
+
+
+            // =================================
+            // ERROR
+            // =================================
+
             else {
 
                 document.getElementById(
@@ -1107,13 +1419,16 @@ document
                     data.message ||
                     "Data submission failed.";
 
+
                 document.getElementById(
                     "message"
-                ).style.color = "red";
+                ).style.color =
+                    "red";
 
             }
 
         })
+
 
         .catch(function(error) {
 
@@ -1122,7 +1437,8 @@ document
 
             document.getElementById(
                 "loading"
-            ).style.display = "none";
+            ).style.display =
+                "none";
 
 
             document.getElementById(
@@ -1130,9 +1446,11 @@ document
             ).innerHTML =
                 "❌ Connection Error";
 
+
             document.getElementById(
                 "message"
-            ).style.color = "red";
+            ).style.color =
+                "red";
 
         });
 
@@ -1141,7 +1459,7 @@ document
 
 
 // =================================
-// RESET
+// RESET FORM
 // =================================
 
 function resetForm() {
@@ -1149,14 +1467,24 @@ function resetForm() {
     stopCamera();
 
 
+    photoData = "";
+
+
     document.getElementById(
         "camera"
-    ).style.display = "none";
+    ).style.display =
+        "none";
 
 
     document.getElementById(
         "photoPreview"
-    ).style.display = "none";
+    ).src = "";
+
+
+    document.getElementById(
+        "photoPreview"
+    ).style.display =
+        "none";
 
 
     document.getElementById(
@@ -1179,13 +1507,17 @@ function resetForm() {
         "message"
     ).innerHTML = "";
 
+
+    document.getElementById(
+        "loading"
+    ).style.display =
+        "none";
+
 }
+
 </script>
 
-
-	
 </body>
 
-	
 </html>
 
