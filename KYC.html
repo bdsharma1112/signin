@@ -468,11 +468,11 @@ placeholder="Enter Remarks"></textarea>
      PHOTO CAPTURE
 ========================= -->
 
-<div class="form-section photo-section">
+//<div class="form-section photo-section">
 
-<h2 class="section-title">
+//<h2 class="section-title">
 Capture Photo
-</h2>
+//</h2>
 
 <label>
 Applicant Photo <span class="required">*</span>
@@ -515,17 +515,17 @@ title="Open Camera">
 <br>
 
 
-<button
+<!-- <button -->
 type="button"
 class="capture-button"
 onclick="capturePhoto()">
 
 CAPTURE PHOTO
 
-</button>
+<!-- </button> -->
 
 
-<button
+<!-- <button
 type="button"
 class="retake-button"
 onclick="retakePhoto()">
@@ -534,7 +534,7 @@ RETAKE
 
 </button>
 
-</div>
+</div> -->
 
 
 <!-- =========================
@@ -711,157 +711,157 @@ function startCamera() {
 // CAPTURE PHOTO
 // =================================
 
-function capturePhoto() {
+// function capturePhoto() {
 
-    var camera =
-        document.getElementById("camera");
-
-
-    var canvas =
-        document.getElementById("photoCanvas");
+//     var camera =
+//         document.getElementById("camera");
 
 
-    var preview =
-        document.getElementById("photoPreview");
+//     var canvas =
+//         document.getElementById("photoCanvas");
 
 
-    if (!cameraStream) {
-
-        alert(
-            "Please open camera first."
-        );
-
-        return;
-
-    }
+//     var preview =
+//         document.getElementById("photoPreview");
 
 
-    if (
-        camera.videoWidth === 0 ||
-        camera.videoHeight === 0
-    ) {
+//     if (!cameraStream) {
 
-        alert(
-            "Camera is not ready. Please wait."
-        );
+//         alert(
+//             "Please open camera first."
+//         );
 
-        return;
+//         return;
 
-    }
+//     }
+
+
+//     if (
+//         camera.videoWidth === 0 ||
+//         camera.videoHeight === 0
+//     ) {
+
+//         alert(
+//             "Camera is not ready. Please wait."
+//         );
+
+//         return;
+
+//     }
 
 
     // Set canvas size
 
-    canvas.width =
-        camera.videoWidth;
+//     canvas.width =
+//         camera.videoWidth;
 
-    canvas.height =
-        camera.videoHeight;
-
-
-    // Draw camera image
-
-    var context =
-        canvas.getContext("2d");
+//     canvas.height =
+//         camera.videoHeight;
 
 
-    context.drawImage(
-        camera,
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
+//     // Draw camera image
+
+//     var context =
+//         canvas.getContext("2d");
 
 
-    // =================================
-    // CONVERT TO BASE64
-    // =================================
-
-    photoData =
-        canvas.toDataURL(
-            "image/jpeg",
-            0.8
-        );
+//     context.drawImage(
+//         camera,
+//         0,
+//         0,
+//         canvas.width,
+//         canvas.height
+//     );
 
 
-    // =================================
-    // SHOW PREVIEW
-    // =================================
+//     // =================================
+//     // CONVERT TO BASE64
+//     // =================================
 
-    preview.src =
-        photoData;
-
-
-    preview.style.display =
-        "block";
-
-
-    camera.style.display =
-        "none";
+//     photoData =
+//         canvas.toDataURL(
+//             "image/jpeg",
+//             0.8
+//         );
 
 
-    stopCamera();
+//     // =================================
+//     // SHOW PREVIEW
+//     // =================================
+
+//     preview.src =
+//         photoData;
 
 
-    document.getElementById(
-        "message"
-    ).innerHTML =
-        "✓ Photo captured successfully";
+//     preview.style.display =
+//         "block";
 
 
-    document.getElementById(
-        "message"
-    ).style.color =
-        "green";
-
-}
+//     camera.style.display =
+//         "none";
 
 
-// =================================
-// STOP CAMERA
-// =================================
-
-function stopCamera() {
-
-    if (cameraStream) {
-
-        cameraStream
-        .getTracks()
-        .forEach(function(track) {
-
-            track.stop();
-
-        });
-
-        cameraStream = null;
-
-    }
-
-}
+//     stopCamera();
 
 
-// =================================
-// RETAKE PHOTO
-// =================================
-
-function retakePhoto() {
-
-    photoData = "";
-
-    document.getElementById(
-        "photoPreview"
-    ).style.display = "none";
+//     document.getElementById(
+//         "message"
+//     ).innerHTML =
+//         "✓ Photo captured successfully";
 
 
-    document.getElementById(
-        "message"
-    ).innerHTML = "";
+//     document.getElementById(
+//         "message"
+//     ).style.color =
+//         "green";
+
+// }
 
 
-    startCamera();
+// // =================================
+// // STOP CAMERA
+// // =================================
 
-}
+// function stopCamera() {
+
+//     if (cameraStream) {
+
+//         cameraStream
+//         .getTracks()
+//         .forEach(function(track) {
+
+//             track.stop();
+
+//         });
+
+//         cameraStream = null;
+
+//     }
+
+// }
+
+
+// // =================================
+// // RETAKE PHOTO
+// // =================================
+
+// function retakePhoto() {
+
+//     photoData = "";
+
+//     document.getElementById(
+//         "photoPreview"
+//     ).style.display = "none";
+
+
+//     document.getElementById(
+//         "message"
+//     ).innerHTML = "";
+
+
+//     startCamera();
+
+// }
 
 
 // =================================
