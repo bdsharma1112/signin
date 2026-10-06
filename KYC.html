@@ -643,68 +643,68 @@ const SCRIPT_URL =
 // GLOBAL VARIABLES
 // =================================
 
-var cameraStream = null;
+// var cameraStream = null;
 
-var photoData = "";
+// var photoData = "";
 
 
 // =================================
 // START CAMERA
 // =================================
 
-function startCamera() {
+// function startCamera() {
 
-    var camera =
-        document.getElementById("camera");
-
-
-    if (
-        !navigator.mediaDevices ||
-        !navigator.mediaDevices.getUserMedia
-    ) {
-
-        alert(
-            "Camera is not supported in this browser."
-        );
-
-        return;
-
-    }
+//     var camera =
+//         document.getElementById("camera");
 
 
-    navigator.mediaDevices.getUserMedia({
+//     if (
+//         !navigator.mediaDevices ||
+//         !navigator.mediaDevices.getUserMedia
+//     ) {
 
-        video: {
-            facingMode: "user"
-        },
+//         alert(
+//             "Camera is not supported in this browser."
+//         );
 
-        audio: false
+//         return;
 
-    })
-
-
-    .then(function(stream) {
-
-        cameraStream = stream;
-
-        camera.srcObject = stream;
-
-        camera.style.display = "block";
-
-    })
+//     }
 
 
-    .catch(function(error) {
+//     navigator.mediaDevices.getUserMedia({
 
-        console.log(error);
+//         video: {
+//             facingMode: "user"
+//         },
 
-        alert(
-            "Camera permission denied or camera not available."
-        );
+//         audio: false
 
-    });
+//     })
 
-}
+
+//     .then(function(stream) {
+
+//         cameraStream = stream;
+
+//         camera.srcObject = stream;
+
+//         camera.style.display = "block";
+
+//     })
+
+
+//     .catch(function(error) {
+
+//         console.log(error);
+
+//         alert(
+//             "Camera permission denied or camera not available."
+//         );
+
+//     });
+
+// }
 
 
 // =================================
@@ -1132,15 +1132,15 @@ document
         // PHOTO VALIDATION
         // =================================
 
-        if (photoData === "") {
+        // if (photoData === "") {
 
-            alert(
-                "Please capture applicant photo"
-            );
+        //     alert(
+        //         "Please capture applicant photo"
+        //     );
 
-            return;
+        //     return;
 
-        }
+        // }
 
 
         // =================================
