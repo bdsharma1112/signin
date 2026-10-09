@@ -7,9 +7,7 @@
 <title>KYC Data Collection Form</title>
 
 <style>
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
     font-family: Arial, sans-serif;
@@ -24,9 +22,7 @@ header {
     padding: 20px;
 }
 
-header h1, header p {
-    margin: 5px;
-}
+header h1, header p { margin: 5px; }
 
 .container {
     width: 90%;
@@ -80,13 +76,9 @@ textarea {
     resize: vertical;
 }
 
-.required {
-    color: red;
-}
+.required { color: red; }
 
-.location-section, .photo-section {
-    text-align: center;
-}
+.location-section, .photo-section { text-align: center; }
 
 .location-status {
     margin-top: 15px;
@@ -127,29 +119,16 @@ button {
     cursor: pointer;
 }
 
-button:hover {
-    opacity: 0.85;
-}
+button:hover { opacity: 0.85; }
+button:disabled { opacity: 0.6; cursor: not-allowed; }
 
-button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.submit-button, .capture-button {
-    background: green;
-}
-
-.reset-button, .retake-button {
-    background: #ff9800;
-}
-
-.back-button, .location-button {
+.submit-button, .capture-button { background: green; }
+.reset-button, .retake-button { background: #ff9800; }
+.back-button, .location-button, .camera-button {
     background: #2196F3;
 }
 
 .camera-button {
-    background: #2196F3;
     font-size: 28px;
     border-radius: 50%;
     width: 65px;
@@ -173,21 +152,10 @@ button:disabled {
 }
 
 @media screen and (max-width: 600px) {
-    .container {
-        width: 95%;
-    }
-
-    .form-row {
-        display: block;
-    }
-
-    header h1 {
-        font-size: 24px;
-    }
-
-    button {
-        max-width: 100%;
-    }
+    .container { width: 95%; }
+    .form-row { display: block; }
+    header h1 { font-size: 24px; }
+    button { max-width: 100%; }
 }
 </style>
 </head>
@@ -201,22 +169,19 @@ button:disabled {
 </header>
 
 <div class="container">
-
 <form id="dataForm">
 
-    <!-- PERSONAL DETAILS -->
     <div class="form-section">
         <h2 class="section-title">Personal Details</h2>
 
         <div class="form-row">
             <div class="form-group">
                 <label for="fullName">Full Name <span class="required">*</span></label>
-                <input type="text" id="fullName" placeholder="Enter Full Name" required>
+                <input type="text" id="fullName" required placeholder="Enter Full Name">
             </div>
-
             <div class="form-group">
                 <label for="fatherName">Father Name <span class="required">*</span></label>
-                <input type="text" id="fatherName" placeholder="Enter Father Name" required>
+                <input type="text" id="fatherName" required placeholder="Enter Father Name">
             </div>
         </div>
 
@@ -225,20 +190,18 @@ button:disabled {
                 <label for="dob">Date of Birth</label>
                 <input type="date" id="dob">
             </div>
-
             <div class="form-group">
                 <label for="gender">Gender</label>
                 <select id="gender">
                     <option value="">Select Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Other</option>
                 </select>
             </div>
         </div>
     </div>
 
-    <!-- CONTACT DETAILS -->
     <div class="form-section">
         <h2 class="section-title">Contact Details</h2>
 
@@ -246,30 +209,27 @@ button:disabled {
             <div class="form-group">
                 <label for="mobile">Mobile Number <span class="required">*</span></label>
                 <input type="tel" id="mobile" maxlength="10"
-                       inputmode="numeric"
-                       placeholder="Enter 10 Digit Mobile Number" required>
+                       inputmode="numeric" required
+                       placeholder="10 Digit Mobile Number">
             </div>
-
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" placeholder="Enter Email Address">
+                <input type="email" id="email" placeholder="Enter Email">
             </div>
         </div>
 
         <label for="address">Address <span class="required">*</span></label>
-        <textarea id="address" placeholder="Enter Complete Address" required></textarea>
+        <textarea id="address" required placeholder="Enter Complete Address"></textarea>
 
         <div class="form-row">
             <div class="form-group">
                 <label for="city">City</label>
                 <input type="text" id="city" placeholder="Enter City">
             </div>
-
             <div class="form-group">
                 <label for="district">District</label>
                 <input type="text" id="district" placeholder="Enter District">
             </div>
-
             <div class="form-group">
                 <label for="pincode">PIN Code</label>
                 <input type="text" id="pincode" maxlength="6"
@@ -278,25 +238,23 @@ button:disabled {
         </div>
     </div>
 
-    <!-- ADDITIONAL DETAILS -->
     <div class="form-section">
         <h2 class="section-title">Additional Details</h2>
 
         <label for="occupation">Occupation</label>
         <select id="occupation">
             <option value="">Select Occupation</option>
-            <option value="Business">Business</option>
-            <option value="Private Job">Private Job</option>
-            <option value="Government Job">Government Job</option>
-            <option value="Student">Student</option>
-            <option value="Other">Other</option>
+            <option>Business</option>
+            <option>Private Job</option>
+            <option>Government Job</option>
+            <option>Student</option>
+            <option>Other</option>
         </select>
 
         <label for="remarks">Remarks</label>
         <textarea id="remarks" placeholder="Enter Remarks"></textarea>
     </div>
 
-    <!-- PHOTO CAPTURE -->
     <div class="form-section photo-section">
         <h2 class="section-title">Capture Photo</h2>
 
@@ -309,28 +267,22 @@ button:disabled {
         <br>
 
         <button type="button" class="camera-button"
-                id="openCameraButton" onclick="startCamera()"
-                title="Open Camera">📷</button>
+                onclick="startCamera()" title="Open Camera">📷</button>
 
         <br>
 
         <button type="button" class="capture-button"
-                id="captureButton" onclick="capturePhoto()">
-            CAPTURE PHOTO
-        </button>
+                onclick="capturePhoto()">CAPTURE PHOTO</button>
 
         <button type="button" class="retake-button"
                 onclick="retakePhoto()">RETAKE</button>
     </div>
 
-    <!-- LOCATION -->
     <div class="location-section">
         <h2>📍 Current Location</h2>
 
         <button type="button" class="location-button"
-                onclick="getLocation()">
-            📍 GET CURRENT LOCATION
-        </button>
+                onclick="getLocation()">📍 GET CURRENT LOCATION</button>
 
         <p id="locationStatus" class="location-status">
             Location not captured
@@ -343,20 +295,15 @@ button:disabled {
     <div id="loading" class="loading">⏳ Submitting data...</div>
     <div id="message" role="status" aria-live="polite"></div>
 
-    <!-- FORM BUTTONS -->
     <div class="buttons">
         <button type="submit" id="submitButton" class="submit-button">
             SUBMIT
         </button>
 
-        <button type="reset" class="reset-button">
-            RESET
-        </button>
+        <button type="reset" class="reset-button">RESET</button>
 
         <button type="button" class="back-button"
-                onclick="window.location.href='home.html'">
-            BACK
-        </button>
+                onclick="window.location.href='home.html'">BACK</button>
     </div>
 
 </form>
@@ -365,9 +312,10 @@ button:disabled {
 <script>
 "use strict";
 
-// GOOGLE APPS SCRIPT WEB APP URL
 const SCRIPT_URL =
 "https://script.google.com/macros/s/AKfycbw2Jwn6SlMicaYC_iYtUPnpj13nl_YFOoeQ_h0WnVrMe7gBqC1Kp9e1F8zEnwNgZBvnOg/exec";
+
+const DRIVE_FOLDER_ID = "1qB7JA7JqWCXvMfmyHROl723HRGjoOh4j";
 
 let cameraStream = null;
 let photoData = "";
@@ -387,7 +335,7 @@ async function startCamera() {
 
     if (!navigator.mediaDevices ||
         !navigator.mediaDevices.getUserMedia) {
-        alert("Camera is not supported. Use HTTPS or localhost.");
+        alert("Camera requires HTTPS or localhost.");
         return;
     }
 
@@ -403,9 +351,9 @@ async function startCamera() {
 
         await camera.play();
     } catch (error) {
-        console.error("Camera error:", error);
-        alert("Camera permission denied or camera is unavailable.");
+        console.error(error);
         stopCamera();
+        alert("Camera permission denied or camera unavailable.");
     }
 }
 
@@ -427,6 +375,7 @@ function capturePhoto() {
     const context = canvas.getContext("2d");
     context.drawImage(camera, 0, 0, canvas.width, canvas.height);
 
+    // Full Base64 Data URL
     photoData = canvas.toDataURL("image/jpeg", 0.8);
 
     preview.src = photoData;
@@ -435,7 +384,7 @@ function capturePhoto() {
 
     stopCamera();
 
-    message.textContent = "✓ Photo captured successfully.";
+    message.textContent = "Photo captured successfully.";
     message.style.color = "green";
 }
 
@@ -445,7 +394,6 @@ function stopCamera() {
         cameraStream.getTracks().forEach(function(track) {
             track.stop();
         });
-
         cameraStream = null;
     }
 
@@ -454,6 +402,8 @@ function stopCamera() {
 
 // RETAKE PHOTO
 function retakePhoto() {
+    if (isSubmitting) return;
+
     photoData = "";
     preview.removeAttribute("src");
     preview.style.display = "none";
@@ -462,12 +412,12 @@ function retakePhoto() {
     startCamera();
 }
 
-// GET CURRENT LOCATION
+// GET LOCATION
 function getLocation() {
     const status = document.getElementById("locationStatus");
 
     if (!navigator.geolocation) {
-        status.textContent = "Location is not supported by this browser.";
+        status.textContent = "Location is not supported.";
         return;
     }
 
@@ -475,17 +425,15 @@ function getLocation() {
 
     navigator.geolocation.getCurrentPosition(
         function(position) {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
-
-            document.getElementById("latitude").value = latitude;
-            document.getElementById("longitude").value = longitude;
+            document.getElementById("latitude").value =
+                position.coords.latitude;
+            document.getElementById("longitude").value =
+                position.coords.longitude;
 
             status.textContent =
-                "✓ Location captured. Latitude: " +
-                latitude.toFixed(6) +
-                ", Longitude: " +
-                longitude.toFixed(6);
+                "Location captured: " +
+                position.coords.latitude.toFixed(6) + ", " +
+                position.coords.longitude.toFixed(6);
         },
         function(error) {
             const errors = {
@@ -495,7 +443,7 @@ function getLocation() {
             };
 
             status.textContent =
-                "❌ " + (errors[error.code] || "Unable to get location.");
+                errors[error.code] || "Unable to get location.";
         },
         {
             enableHighAccuracy: true,
@@ -505,15 +453,13 @@ function getLocation() {
     );
 }
 
-// CLEAR FORM STATE AFTER RESET OR SUCCESS
+// CLEAR CAMERA AND LOCATION
 function clearCaptureState() {
     stopCamera();
-
     photoData = "";
 
     preview.removeAttribute("src");
     preview.style.display = "none";
-
     camera.style.display = "none";
 
     canvas.width = 0;
@@ -521,88 +467,71 @@ function clearCaptureState() {
 
     document.getElementById("latitude").value = "";
     document.getElementById("longitude").value = "";
-
     document.getElementById("locationStatus").textContent =
         "Location not captured";
 }
 
-// RESET FORM
-form.addEventListener("reset", function() {
+// RESET
+form.addEventListener("reset", function(event) {
     if (isSubmitting) {
+        event.preventDefault();
         return;
     }
 
     clearCaptureState();
-
     message.textContent = "";
     loading.style.display = "none";
 });
 
-// SUBMIT FORM
+// SUBMIT
 form.addEventListener("submit", async function(event) {
     event.preventDefault();
 
-    if (isSubmitting) {
-        return;
-    }
+    if (isSubmitting) return;
 
-    const fullName = document.getElementById("fullName").value.trim();
-    const fatherName = document.getElementById("fatherName").value.trim();
-    const dob = document.getElementById("dob").value;
-    const gender = document.getElementById("gender").value;
-    const mobile = document.getElementById("mobile").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const address = document.getElementById("address").value.trim();
-    const city = document.getElementById("city").value.trim();
-    const district = document.getElementById("district").value.trim();
-    const pincode = document.getElementById("pincode").value.trim();
-    const occupation = document.getElementById("occupation").value;
-    const remarks = document.getElementById("remarks").value.trim();
-    const latitude = document.getElementById("latitude").value;
-    const longitude = document.getElementById("longitude").value;
+    const getValue = function(id) {
+        return document.getElementById(id).value.trim();
+    };
 
-    // VALIDATION
+    const mobile = getValue("mobile");
+    const pincode = getValue("pincode");
+
     if (!/^[0-9]{10}$/.test(mobile)) {
         alert("Please enter a valid 10-digit mobile number.");
         return;
     }
 
-    if (pincode !== "" && !/^[0-9]{6}$/.test(pincode)) {
+    if (pincode && !/^[0-9]{6}$/.test(pincode)) {
         alert("Please enter a valid 6-digit PIN code.");
         return;
     }
 
-    //if (!photoData) {
-       // alert("Please capture the applicant photo.");
-       // return;
-    //}
+    if (!photoData) {
+        alert("Please capture the applicant photo first.");
+        return;
+    }
 
-    //if (latitude === "" || longitude === "") {
-        //alert("Please capture the current location.");
-        //return;
-   // }
-
-    // PREPARE DATA
     const formData = new URLSearchParams();
 
     formData.append("action", "save");
-    formData.append("fullName", fullName);
-    formData.append("fatherName", fatherName);
-    formData.append("dob", dob);
-    formData.append("gender", gender);
+    formData.append("fullName", getValue("fullName"));
+    formData.append("fatherName", getValue("fatherName"));
+    formData.append("dob", getValue("dob"));
+    formData.append("gender", getValue("gender"));
     formData.append("mobile", mobile);
-    formData.append("email", email);
-    formData.append("address", address);
-    formData.append("city", city);
-    formData.append("district", district);
+    formData.append("email", getValue("email"));
+    formData.append("address", getValue("address"));
+    formData.append("city", getValue("city"));
+    formData.append("district", getValue("district"));
     formData.append("pincode", pincode);
-    formData.append("occupation", occupation);
-    formData.append("remarks", remarks);
-    formData.append("latitude", latitude);
-    formData.append("longitude", longitude);
+    formData.append("occupation", getValue("occupation"));
+    formData.append("remarks", getValue("remarks"));
+    formData.append("latitude", getValue("latitude"));
+    formData.append("longitude", getValue("longitude"));
+
+    // Send the complete Data URL to Apps Script.
     formData.append("photoData", photoData);
 
-    // SHOW LOADING
     isSubmitting = true;
     submitButton.disabled = true;
     loading.style.display = "block";
@@ -619,15 +548,14 @@ form.addEventListener("submit", async function(event) {
         });
 
         const responseText = await response.text();
-
         let data;
 
         try {
             data = JSON.parse(responseText);
-        } catch (parseError) {
-            console.error("Invalid server response:", responseText);
+        } catch (error) {
+            console.error("Server response:", responseText);
             throw new Error(
-                "Server returned an invalid response. Check your Apps Script deployment."
+                "Invalid server response. Check Apps Script deployment and response."
             );
         }
 
@@ -635,23 +563,23 @@ form.addEventListener("submit", async function(event) {
             throw new Error("HTTP error: " + response.status);
         }
 
-        if (data.status === "success") {
-            form.reset();
-            clearCaptureState();
-
-            message.textContent =
-                "✓ " + (data.message ||
-                "KYC data and photo saved successfully.");
-
-            message.style.color = "green";
-        } else {
-            throw new Error(data.message || "Data submission failed.");
+        if (data.status !== "success") {
+            throw new Error(data.message || "KYC submission failed.");
         }
+
+        form.reset();
+        clearCaptureState();
+
+        message.textContent =
+            "Success: " +
+            (data.message || "KYC data and photo saved successfully.");
+
+        message.style.color = "green";
 
     } catch (error) {
         console.error("Submission error:", error);
 
-        message.textContent = "❌ " + error.message;
+        message.textContent = "Error: " + error.message;
         message.style.color = "red";
 
     } finally {
@@ -661,12 +589,8 @@ form.addEventListener("submit", async function(event) {
     }
 });
 
-// STOP CAMERA IF PAGE IS CLOSED OR HIDDEN
 window.addEventListener("pagehide", stopCamera);
 </script>
 
-    
-</script>
 </body>
 </html>
-
