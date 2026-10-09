@@ -665,6 +665,39 @@ form.addEventListener("submit", async function(event) {
 window.addEventListener("pagehide", stopCamera);
 </script>
 
+    <input type="file" id="photo" accept="image/*">
+
+<button type="button" onclick="savePhoto()">Save Photo</button>
+
+<script>
+    
+function savePhoto() {
+    var fileInput = document.getElementById("photo");
+    var file = fileInput.files[0];
+
+    if (!file) {
+        alert("Please select a photo");
+        return;
+    }
+
+    var reader = new FileReader();
+
+    reader.onload = function(event) {
+        var base64 = event.target.result.split(",")[1];
+
+        google.script.run
+            .withSuccessHandler(function(response) {
+                alert("Photo saved successfully");
+            })
+            .withFailureHandler(function(error) {
+                alert("PHOTO SAVE ERROR: " + error.message);
+            })
+            .savePhotoToDrive(base64, file.type, file.name);
+    };
+
+    reader.readAsDataURL(file);
+}
+</script>
 </body>
 </html>
 
