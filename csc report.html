@@ -1,0 +1,357 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Get Report Summary</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+    margin: 0;
+    padding: 15px;
+}
+
+.container {
+    max-width: 850px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+h2 {
+    background: #2196F3;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    margin-top: 0;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin: 15px 0 5px;
+}
+
+input, button {
+    padding: 11px;
+    font-size: 15px;
+    border-radius: 5px;
+}
+
+input {
+    border: 1px solid #bbb;
+    width: 100%;
+}
+
+button {
+    background: #2196F3;
+    color: white;
+    border: 0;
+    cursor: pointer;
+    margin-top: 12px;
+}
+
+button:disabled {
+    background: #888;
+    cursor: wait;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.card {
+    background: #eaf4ff;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+.card h3 {
+    font-size: 14px;
+}
+
+.amount {
+    font-size: 21px;
+    font-weight: bold;
+}
+
+.table-wrap {
+    overflow-x: auto;
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 400px;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background: #2196F3;
+    color: white;
+}
+
+#message {
+    margin-top: 15px;
+    overflow-wrap: anywhere;
+}
+</style>
+ <script>
+
+	if (sessionStorage.getItem("loginStatus") !== "success") {
+
+   	 window.location.href = "index.html";
+
+	}
+
+	</script>
+</head>
+
+<body>
+<div class="container">
+
+<h2>GET REPORT SUMMARY</h2>
+
+<label for="reportDate">SELECT DATE</label>
+<input type="date" id="reportDate" required>
+
+<button type="button" id="reportButton" onclick="getReport()">
+    GET REPORT
+</button>
+
+<p id="message">Please select a date and click GET REPORT.</p>
+
+<div class="cards">
+    <div class="card">
+        <h3>TOTAL TRANSACTIONS</h3>
+        <div class="amount" id="transactions">0</div>
+    </div>
+
+    <div class="card">
+        <h3>TOTAL CASH (Rs)</h3>
+        <div class="amount" id="cash">0.00</div>
+    </div>
+
+    <div class="card">
+        <h3>TOTAL UPI (Rs)</h3>
+        <div class="amount" id="upi">0.00</div>
+    </div>
+
+    <div class="card">
+        <h3>TOTAL CHEQUE (Rs)</h3>
+        <div class="amount" id="cheque">0.00</div>
+    </div>
+
+    <div class="card">
+        <h3>GRAND TOTAL PAYMENT RECEIVED (Rs)</h3>
+        <div class="amount" id="grandTotal">0.00</div>
+    </div>
+</div>
+
+<h3>SERVICE TYPE — ITEM WISE TRANSACTIONS</h3>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+    <th>Service Type</th>
+    <th>Transactions</th>
+    <th>Total Amount (Rs)</th>
+</tr>
+</thead>
+<tbody id="serviceRows">
+<tr>
+    <td colspan="3">Select a date to view report.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+</div>
+
+<script>
+const SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbzjH45756XEUQYyiX516wqxvI7zf4pKekD2QRxd60btX7nOw0KNH3MwdViIjbYEkjI5/exec";
+
+let activeScript = null;
+let activeCallback = null;
+let reportTimeout = null;
+
+function showMessage(message) {
+    document.getElementById("message").textContent = message;
+}
+
+function resetReport() {
+    document.getElementById("transactions").textContent = "0";
+    document.getElementById("cash").textContent = "0.00";
+    document.getElementById("upi").textContent = "0.00";
+    document.getElementById("cheque").textContent = "0.00";
+    document.getElementById("grandTotal").textContent = "0.00";
+
+    document.getElementById("serviceRows").innerHTML =
+        '<tr><td colspan="3">No report data loaded.</td></tr>';
+}
+
+function cleanupRequest() {
+    if (reportTimeout !== null) {
+        clearTimeout(reportTimeout);
+        reportTimeout = null;
+    }
+
+    if (activeCallback) {
+        delete window[activeCallback];
+        activeCallback = null;
+    }
+
+    if (activeScript) {
+        activeScript.remove();
+        activeScript = null;
+    }
+
+    document.getElementById("reportButton").disabled = false;
+}
+
+function getReport() {
+    const date = document.getElementById("reportDate").value;
+
+    if (!date) {
+        showMessage("Please select date.");
+        return;
+    }
+
+    // Cancel any previous report request.
+    cleanupRequest();
+
+    resetReport();
+
+    document.getElementById("reportButton").disabled = true;
+    showMessage("Loading report for " + date + "...");
+
+    const callbackName =
+        "reportCallback_" + Date.now() + "_" +
+        Math.floor(Math.random() * 100000);
+
+    activeCallback = callbackName;
+    activeScript = document.createElement("script");
+
+    const thisScript = activeScript;
+    const thisCallback = callbackName;
+
+    reportTimeout = setTimeout(function() {
+        if (activeCallback !== thisCallback) return;
+
+        cleanupRequest();
+
+        showMessage(
+            "Request timed out. Check Apps Script deployment, URL and JSONP support."
+        );
+    }, 20000);
+
+    window[callbackName] = function(data) {
+        if (activeCallback !== thisCallback) return;
+
+        cleanupRequest();
+
+        if (!data || data.status !== "success") {
+            showMessage(
+                data && data.message
+                    ? "Report error: " + data.message
+                    : "Invalid response from Apps Script. Check doGet() and report function."
+            );
+            return;
+        }
+
+        document.getElementById("transactions").textContent =
+            Number(data.transactions || 0);
+
+        document.getElementById("cash").textContent =
+            Number(data.cash || 0).toFixed(2);
+
+        document.getElementById("upi").textContent =
+            Number(data.upi || 0).toFixed(2);
+
+        document.getElementById("cheque").textContent =
+            Number(data.cheque || 0).toFixed(2);
+
+        document.getElementById("grandTotal").textContent =
+            Number(data.grandTotal || 0).toFixed(2);
+
+        const tbody = document.getElementById("serviceRows");
+        tbody.replaceChildren();
+
+        if (!Array.isArray(data.services) || data.services.length === 0) {
+            const tr = document.createElement("tr");
+            const td = document.createElement("td");
+
+            td.colSpan = 3;
+            td.textContent = "No records found for " + date + ".";
+
+            tr.appendChild(td);
+            tbody.appendChild(tr);
+        } else {
+            data.services.forEach(function(item) {
+                const tr = document.createElement("tr");
+
+                const values = [
+                    item.serviceType || "",
+                    Number(item.transactions || 0),
+                    Number(item.totalAmount || 0).toFixed(2)
+                ];
+
+                values.forEach(function(value) {
+                    const td = document.createElement("td");
+                    td.textContent = value;
+                    tr.appendChild(td);
+                });
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        showMessage(
+            "Report loaded for " + date +
+            ". Transactions: " + Number(data.transactions || 0)
+        );
+    };
+
+    thisScript.onerror = function() {
+        if (activeCallback !== thisCallback) return;
+
+        cleanupRequest();
+
+        showMessage(
+            "Failed to load report. Verify the /exec URL, deployment access and Apps Script errors."
+        );
+    };
+
+    thisScript.src = SCRIPT_URL +
+        "?action=report" +
+        "&date=" + encodeURIComponent(date) +
+        "&callback=" + encodeURIComponent(callbackName) +
+        "&_=" + Date.now();
+
+    document.body.appendChild(thisScript);
+}
+</script>
+
+</body>
+</html>
