@@ -29,13 +29,15 @@
         }
 
 	.form-box { ;
-            background: pink;
-            width: 350px;
-            margin: 30px auto;
+            background: blue;
+            width: 150px;
+            margin-left: 2px ;
+			margin-right:  auto;
             padding: 25px;
-            border-radius: 50px;
+            border-radius: 5px;
             box-shadow: 0 0 10px #aaa;
-	        text-align: left;
+	        text-align: center;
+			color:white
         }
 
         
@@ -62,12 +64,13 @@
             color: blue;
             background: yellow;
             border: 1px solid blue;
-            padding: 12px 25px;
-            font-size: 16px;
+            padding: 10px 25px;
+            font-size: 14px;
             border-radius: 6px;
             cursor: pointer;
             margin-top: 15px;
-			width: 50%;
+			width: 100%;
+			text-align: left;
         }
 
 
@@ -86,7 +89,7 @@
         .back-button,
         .report-button,
         .search-button, 
-	.logout-button { 
+	    .logout-button { 
 
             margin: 10px 5px;
 
@@ -118,7 +121,7 @@
             background: #ff9800;
         }
 
-	.logout-button {
+	  .logout-button {
             background: red;
 	   font-size: 10px
         }
@@ -137,17 +140,8 @@
 
 	</script>
 
- <script>
 
-	if (sessionStorage.getItem("loginStatus") !== "success") {
-
-   	 window.location.href = "index.html";
-
-	}
-
-	</script>
 </head>
-
 
 <body>
 
@@ -173,11 +167,11 @@
 
 
 	<button onclick="window.location.href='ocsc.html'">OCSC</button> <br>
+	
+	<button onclick="window.location.href='csc report'">CSC Report</button> <br>
 		
 	<button onclick="window.location.href='KYC.html'">KYC</button> <br>
-
-	<button onclick="window.location.href='csc report'">CSC Report</button> <br>
-	
+		
 	<button onclick="window.location.href='Report.html'">Report</button> <br>	
 	        
         <button
@@ -204,7 +198,16 @@
         </button>
 
 	
-  <script>
+        <button
+            type="button"
+            class="logout"
+            onclick="window.location.href= logout ">
+
+          Logout
+
+        </button>
+     
+	<script>
 
 	function logout() {
 
@@ -214,21 +217,8 @@
 
 	}
 
-</script>
-   
-<script>
-
-	function logout() {
-
-    	sessionStorage.removeItem("loginStatus");
-
-    	window.location.href = "index.html";
-
-	}
-
-</script>
+	</script>
      
 </body>
 
 </html>
-
