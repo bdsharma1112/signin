@@ -136,7 +136,16 @@
 	}
 
 	</script>
- 
+
+ <script>
+
+	if (sessionStorage.getItem("loginStatus") !== "success") {
+
+   	 window.location.href = "index.html";
+
+	}
+
+	</script>
 </head>
 
 
