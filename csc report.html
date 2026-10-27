@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Get Report Summary</title>
+<title>Summary Report</title>
 
 <style>
 * {
@@ -13,7 +13,7 @@
 
 body {
     font-family: Arial, sans-serif;
-    background: #f2f2f2;
+    background: blue;
     margin: 0;
     padding: 15px;
 }
@@ -21,9 +21,10 @@ body {
 .container {
     max-width: 850px;
     margin: auto;
-    background: white;
+    background: brown;
     padding: 20px;
     border-radius: 10px;
+	color: white;
 }
 
 h2 {
@@ -38,6 +39,7 @@ label {
     display: block;
     font-weight: bold;
     margin: 15px 0 5px;
+	color: white;
 }
 
 input, button {
@@ -47,8 +49,10 @@ input, button {
 }
 
 input {
-    border: 1px solid #bbb;
-    width: 100%;
+    border: 1px solid red;
+    width: 50%;
+	color: green;
+	background:pink;
 }
 
 button {
@@ -81,11 +85,14 @@ button:disabled {
 
 .card h3 {
     font-size: 14px;
+	color:blue;
+	
 }
 
 .amount {
     font-size: 21px;
     font-weight: bold;
+	color:red;
 }
 
 .table-wrap {
@@ -115,21 +122,13 @@ th {
     overflow-wrap: anywhere;
 }
 </style>
- <script>
-
-	if (sessionStorage.getItem("loginStatus") !== "success") {
-
-   	 window.location.href = "index.html";
-
-	}
-
-	</script>
+ 
 </head>
 
 <body>
 <div class="container">
 
-<h2>GET REPORT SUMMARY</h2>
+<h2>SUMMARY REPORT</h2>
 
 <label for="reportDate">SELECT DATE</label>
 <input type="date" id="reportDate" required>
