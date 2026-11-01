@@ -1,0 +1,546 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>RANGED REPORT</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: blue;
+    margin: 0;
+    padding: 15px;
+}
+
+.container {
+    max-width: 850px;
+    margin: auto;
+    background: gray;
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+}
+
+h2 {
+    background: #2196F3;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    margin-top: 0;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin: 15px 0 5px;
+    color: white;
+}
+
+.date-box {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.date-field {
+    flex: 1;
+    min-width: 200px;
+}
+
+input, button {
+    padding: 11px;
+    font-size: 15px;
+    border-radius: 5px;
+}
+
+input {
+    border: 1px solid red;
+    width: 100%;
+    color: green;
+    background: pink;
+}
+
+button {
+    background: #2196F3;
+    color: white;
+    border: 0;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+button:disabled {
+    background: #888;
+    cursor: wait;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.card {
+    background: #eaf4ff;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+.card h3 {
+    font-size: 14px;
+    color: blue;
+}
+
+.amount {
+    font-size: 21px;
+    font-weight: bold;
+    color: red;
+}
+
+.table-wrap {
+    overflow-x: auto;
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 400px;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background: #2196F3;
+    color: white;
+}
+
+#message {
+    margin-top: 15px;
+    overflow-wrap: anywhere;
+}
+
+@media(max-width: 500px) {
+    .container {
+        padding: 12px;
+    }
+
+    .date-field {
+        min-width: 100%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Date range to view report</h2>
+
+<div class="date-box">
+
+    <div class="date-field">
+        <label for="fromDate">FROM DATE</label>
+        <input type="date" id="fromDate" required>
+    </div>
+
+    <div class="date-field">
+        <label for="toDate">TO DATE</label>
+        <input type="date" id="toDate" required>
+    </div>
+
+</div>
+
+<button type="button" id="reportButton" onclick="getReport()">
+    GET REPORT
+</button>
+
+<p id="message">
+    Please select From Date and To Date.
+</p>
+
+<div class="cards">
+
+    <div class="card">
+        <h3>TOTAL TRANSACTIONS</h3>
+        <div class="amount" id="transactions">0</div>
+    </div>
+
+    <div class="card">
+        <h3>TOTAL CASH (Rs)</h3>
+        <div class="amount" id="cash">0.00</div>
+    </div>
+
+    <div class="card">
+        <h3>TOTAL UPI (Rs)</h3>
+        <div class="amount" id="upi">0.00</div>
+    </div>
+
+    <div class="card">
+        <h3>TOTAL CHEQUE (Rs)</h3>
+        <div class="amount" id="cheque">0.00</div>
+    </div>
+
+    <div class="card">
+        <h3>GRAND TOTAL PAYMENT RECEIVED (Rs)</h3>
+        <div class="amount" id="grandTotal">0.00</div>
+    </div>
+
+</div>
+
+<h3>SERVICE TYPE — ITEM WISE TRANSACTIONS</h3>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+    <th>Service Type</th>
+    <th>Transactions</th>
+    <th>Total Amount (Rs)</th>
+</tr>
+</thead>
+
+<tbody id="serviceRows">
+
+<tr>
+    <td colspan="3">Select a date range to view report.</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<script>
+
+const SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbwMV8c8GGu3BWw14Oeaf4qL6wD0-NDzuRvvbgccHas_tXfJt3lq2UOTHqOiXv3b_UPcrQ/exec";
+
+let activeScript = null;
+let activeCallback = null;
+let reportTimeout = null;
+
+
+// ==================================================
+// MESSAGE
+// ==================================================
+
+function showMessage(message) {
+
+    document.getElementById("message").textContent = message;
+
+}
+
+
+// ==================================================
+// RESET REPORT
+// ==================================================
+
+function resetReport() {
+
+    document.getElementById("transactions").textContent = "0";
+
+    document.getElementById("cash").textContent = "0.00";
+
+    document.getElementById("upi").textContent = "0.00";
+
+    document.getElementById("cheque").textContent = "0.00";
+
+    document.getElementById("grandTotal").textContent = "0.00";
+
+    document.getElementById("serviceRows").innerHTML =
+        '<tr><td colspan="3">No report data loaded.</td></tr>';
+
+}
+
+
+// ==================================================
+// CLEANUP REQUEST
+// ==================================================
+
+function cleanupRequest() {
+
+    if (reportTimeout !== null) {
+
+        clearTimeout(reportTimeout);
+
+        reportTimeout = null;
+
+    }
+
+    if (activeCallback) {
+
+        delete window[activeCallback];
+
+        activeCallback = null;
+
+    }
+
+    if (activeScript) {
+
+        activeScript.remove();
+
+        activeScript = null;
+
+    }
+
+    document.getElementById("reportButton").disabled = false;
+
+}
+
+
+// ==================================================
+// GET REPORT
+// ==================================================
+
+function getReport() {
+
+    const fromDate =
+        document.getElementById("fromDate").value;
+
+    const toDate =
+        document.getElementById("toDate").value;
+
+
+    // Date validation
+
+    if (!fromDate || !toDate) {
+
+        showMessage("Please select From Date and To Date.");
+
+        return;
+
+    }
+
+
+    if (fromDate > toDate) {
+
+        showMessage("From Date cannot be greater than To Date.");
+
+        return;
+
+    }
+
+
+    // Cancel previous request
+
+    cleanupRequest();
+
+    resetReport();
+
+    document.getElementById("reportButton").disabled = true;
+
+    showMessage(
+        "Loading report from " + fromDate + " to " + toDate + "..."
+    );
+
+
+    const callbackName =
+        "reportCallback_" +
+        Date.now() +
+        "_" +
+        Math.floor(Math.random() * 100000);
+
+
+    activeCallback = callbackName;
+
+    activeScript = document.createElement("script");
+
+
+    const thisScript = activeScript;
+
+    const thisCallback = callbackName;
+
+
+    // Timeout
+
+    reportTimeout = setTimeout(function() {
+
+        if (activeCallback !== thisCallback) return;
+
+        cleanupRequest();
+
+        showMessage(
+            "Request timed out. Check Apps Script deployment and URL."
+        );
+
+    }, 20000);
+
+
+    // ==================================================
+    // JSONP CALLBACK
+    // ==================================================
+
+    window[callbackName] = function(data) {
+
+        if (activeCallback !== thisCallback) return;
+
+        cleanupRequest();
+
+
+        if (!data || data.status !== "success") {
+
+            showMessage(
+                data && data.message
+                    ? "Report error: " + data.message
+                    : "Invalid response from Apps Script."
+            );
+
+            return;
+
+        }
+
+
+        // Summary Cards
+
+        document.getElementById("transactions").textContent =
+            Number(data.transactions || 0);
+
+        document.getElementById("cash").textContent =
+            Number(data.cash || 0).toFixed(2);
+
+        document.getElementById("upi").textContent =
+            Number(data.upi || 0).toFixed(2);
+
+        document.getElementById("cheque").textContent =
+            Number(data.cheque || 0).toFixed(2);
+
+        document.getElementById("grandTotal").textContent =
+            Number(data.grandTotal || 0).toFixed(2);
+
+
+        // Service Wise Report
+
+        const tbody =
+            document.getElementById("serviceRows");
+
+        tbody.replaceChildren();
+
+
+        if (
+            !Array.isArray(data.services) ||
+            data.services.length === 0
+        ) {
+
+            const tr = document.createElement("tr");
+
+            const td = document.createElement("td");
+
+            td.colSpan = 3;
+
+            td.textContent =
+                "No records found between " +
+                fromDate +
+                " and " +
+                toDate +
+                ".";
+
+            tr.appendChild(td);
+
+            tbody.appendChild(tr);
+
+        } else {
+
+            data.services.forEach(function(item) {
+
+                const tr = document.createElement("tr");
+
+
+                const values = [
+
+                    item.serviceType || "",
+
+                    Number(item.transactions || 0),
+
+                    Number(item.totalAmount || 0).toFixed(2)
+
+                ];
+
+
+                values.forEach(function(value) {
+
+                    const td = document.createElement("td");
+
+                    td.textContent = value;
+
+                    tr.appendChild(td);
+
+                });
+
+
+                tbody.appendChild(tr);
+
+            });
+
+        }
+
+
+        showMessage(
+            "Report loaded from " +
+            fromDate +
+            " to " +
+            toDate +
+            ". Total Transactions: " +
+            Number(data.transactions || 0)
+        );
+
+    };
+
+
+    // ==================================================
+    // SCRIPT ERROR
+    // ==================================================
+
+    thisScript.onerror = function() {
+
+        if (activeCallback !== thisCallback) return;
+
+        cleanupRequest();
+
+        showMessage(
+            "Failed to load report. Verify the /exec URL, deployment access and Apps Script errors."
+        );
+
+    };
+
+
+    // ==================================================
+    // JSONP REQUEST
+    // ==================================================
+
+    thisScript.src =
+        SCRIPT_URL +
+        "?action=report" +
+        "&fromDate=" + encodeURIComponent(fromDate) +
+        "&toDate=" + encodeURIComponent(toDate) +
+        "&callback=" + encodeURIComponent(callbackName) +
+        "&_=" + Date.now();
+
+
+    document.body.appendChild(thisScript);
+
+}
+
+</script>
+
+</body>
+</html>
