@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Summary Report</title>
+<title>Get Report Summary</title>
 
 <style>
 * {
@@ -13,18 +12,17 @@
 
 body {
     font-family: Arial, sans-serif;
-    background: blue;
+    background: #f2f2f2;
     margin: 0;
     padding: 15px;
 }
 
 .container {
-    max-width: 850px;
+    max-width: 1100px;
     margin: auto;
-    background: brown;
+    background: white;
     padding: 20px;
     border-radius: 10px;
-	color: white;
 }
 
 h2 {
@@ -35,24 +33,25 @@ h2 {
     margin-top: 0;
 }
 
+h3 {
+    margin-top: 25px;
+}
+
 label {
     display: block;
     font-weight: bold;
     margin: 15px 0 5px;
-	color: white;
 }
 
-input, button {
+input, select, button {
     padding: 11px;
     font-size: 15px;
     border-radius: 5px;
 }
 
-input {
-    border: 1px solid red;
-    width: 50%;
-	color: green;
-	background:pink;
+input, select {
+    border: 1px solid #bbb;
+    width: 100%;
 }
 
 button {
@@ -60,12 +59,28 @@ button {
     color: white;
     border: 0;
     cursor: pointer;
-    margin-top: 12px;
+    margin: 12px 5px 0 0;
+}
+
+button:hover {
+    background: #0875c9;
 }
 
 button:disabled {
     background: #888;
     cursor: wait;
+}
+
+.summary-btn {
+    background: #2196F3;
+}
+
+.detail-btn {
+    background: #16834a;
+}
+
+.detail-btn:hover {
+    background: #106b3b;
 }
 
 .cards {
@@ -85,31 +100,30 @@ button:disabled {
 
 .card h3 {
     font-size: 14px;
-	color:blue;
-	
+    margin-top: 0;
 }
 
 .amount {
     font-size: 21px;
     font-weight: bold;
-	color:red;
 }
 
 .table-wrap {
     overflow-x: auto;
-    margin-top: 20px;
+    margin-top: 15px;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 400px;
+    min-width: 450px;
 }
 
 th, td {
     border: 1px solid #ccc;
     padding: 10px;
     text-align: left;
+    white-space: nowrap;
 }
 
 th {
@@ -120,97 +134,370 @@ th {
 #message {
     margin-top: 15px;
     overflow-wrap: anywhere;
+    font-weight: bold;
+}
+
+.section {
+    margin-top: 25px;
+}
+
+/* DETAILED REPORT POPUP */
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.modal-content {
+    background: white;
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    background: #16834a;
+    color: white;
+    padding: 12px;
+    border-radius: 6px;
+}
+
+.modal-header h2 {
+    background: none;
+    margin: 0;
+    padding: 5px;
+}
+
+.close-btn {
+    background: #d32f2f;
+    margin: 0;
+    font-size: 20px;
+}
+
+.edit-btn {
+    background: #ff9800;
+    padding: 7px 12px;
+    margin: 0;
+}
+
+.save-btn {
+    background: #16834a;
+}
+
+.cancel-btn {
+    background: #777;
+}
+
+.edit-form {
+    display: none;
+    background: #f2f8ff;
+    border: 1px solid #2196F3;
+    border-radius: 8px;
+    padding: 18px;
+    margin-top: 20px;
+}
+
+.edit-form .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+}
+
+.edit-form label {
+    margin-top: 8px;
+}
+
+.popup-table {
+    overflow-x: auto;
+    margin-top: 15px;
+}
+
+#detailTable {
+    min-width: 1150px;
+}
+
+#detailTable th {
+    background: #16834a;
+}
+
+#editMessage {
+    font-weight: bold;
+    margin-top: 12px;
+}
+
+@media(max-width:600px) {
+    .container {
+        padding: 12px;
+    }
+
+    button {
+        width: 100%;
+    }
+
+    .modal {
+        padding: 5px;
+    }
+
+    .modal-content {
+        padding: 10px;
+        margin: 5px auto;
+    }
+
+    .modal-header h2 {
+        font-size: 16px;
+    }
 }
 </style>
- 
 </head>
 
 <body>
+
 <div class="container">
 
-<h2>SUMMARY REPORT</h2>
+    <h2>GET REPORT SUMMARY</h2>
 
-<label for="reportDate">SELECT DATE</label>
-<input type="date" id="reportDate" required>
+    <label for="reportDate">SELECT DATE</label>
+    <input type="date" id="reportDate" required>
 
-<button type="button" id="reportButton" onclick="getReport()">
-    GET REPORT
-</button>
+    <button type="button"
+            class="summary-btn"
+            id="reportButton"
+            onclick="getReport()">
+        GET REPORT
+    </button>
 
-<p id="message">Please select a date and click GET REPORT.</p>
+    <button type="button"
+            class="detail-btn"
+            id="detailButton"
+            onclick="getDetailedReport()">
+        GET DETAILED REPORT
+    </button>
 
-<div class="cards">
-    <div class="card">
-        <h3>TOTAL TRANSACTIONS</h3>
-        <div class="amount" id="transactions">0</div>
+    <p id="message">Please select a date and click a report button.</p>
+
+    <!-- SUMMARY REPORT -->
+
+    <div class="section">
+
+        <h3>REPORT SUMMARY</h3>
+
+        <div class="cards">
+
+            <div class="card">
+                <h3>TOTAL TRANSACTIONS</h3>
+                <div class="amount" id="transactions">0</div>
+            </div>
+
+            <div class="card">
+                <h3>TOTAL CASH (Rs)</h3>
+                <div class="amount" id="cash">0.00</div>
+            </div>
+
+            <div class="card">
+                <h3>TOTAL UPI (Rs)</h3>
+                <div class="amount" id="upi">0.00</div>
+            </div>
+
+            <div class="card">
+                <h3>TOTAL CHEQUE (Rs)</h3>
+                <div class="amount" id="cheque">0.00</div>
+            </div>
+
+            <div class="card">
+                <h3>GRAND TOTAL PAYMENT RECEIVED (Rs)</h3>
+                <div class="amount" id="grandTotal">0.00</div>
+            </div>
+
+        </div>
+
+        <h3>SERVICE TYPE — ITEM WISE TRANSACTIONS</h3>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Service Type</th>
+                        <th>Transactions</th>
+                        <th>Total Amount (Rs)</th>
+                    </tr>
+                </thead>
+
+                <tbody id="serviceRows">
+                    <tr>
+                        <td colspan="3">Select a date to view report.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
     </div>
 
-    <div class="card">
-        <h3>TOTAL CASH (Rs)</h3>
-        <div class="amount" id="cash">0.00</div>
-    </div>
-
-    <div class="card">
-        <h3>TOTAL UPI (Rs)</h3>
-        <div class="amount" id="upi">0.00</div>
-    </div>
-
-    <div class="card">
-        <h3>TOTAL CHEQUE (Rs)</h3>
-        <div class="amount" id="cheque">0.00</div>
-    </div>
-
-    <div class="card">
-        <h3>GRAND TOTAL PAYMENT RECEIVED (Rs)</h3>
-        <div class="amount" id="grandTotal">0.00</div>
-    </div>
 </div>
 
-<h3>SERVICE TYPE — ITEM WISE TRANSACTIONS</h3>
+<!-- DETAILED REPORT POPUP -->
 
-<div class="table-wrap">
-<table>
-<thead>
-<tr>
-    <th>Service Type</th>
-    <th>Transactions</th>
-    <th>Total Amount (Rs)</th>
-</tr>
-</thead>
-<tbody id="serviceRows">
-<tr>
-    <td colspan="3">Select a date to view report.</td>
-</tr>
-</tbody>
-</table>
-</div>
+<div id="detailModal" class="modal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+
+            <h2>COMPLETE DETAILED REPORT</h2>
+
+            <button type="button"
+                    class="close-btn"
+                    onclick="closeDetailedPopup()">
+                X
+            </button>
+
+        </div>
+
+        <h3 id="popupDate">Detailed Transactions</h3>
+
+        <div class="popup-table">
+
+            <table id="detailTable">
+
+                <thead>
+                    <tr>
+                        <th>Sr. No.</th>
+                        <th>Customer Name</th>
+                        <th>New Mobile No</th>
+                        <th>SIM No</th>
+                        <th>Service Type</th>
+                        <th>Amount (Rs)</th>
+                        <th>Payment Mode</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="detailRows">
+                    <tr>
+                        <td colspan="11">No records.</td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <!-- EDIT FORM -->
+
+        <div id="editForm" class="edit-form">
+
+            <h3>EDIT CUSTOMER TRANSACTION</h3>
+
+            <input type="hidden" id="editRow">
+
+            <div class="form-grid">
+
+                <div>
+                    <label for="editCustomerName">Customer Name</label>
+                    <input type="text" id="editCustomerName">
+                </div>
+
+                <div>
+                    <label for="editMobileNo">New Mobile No</label>
+                    <input type="text" id="editMobileNo" maxlength="10">
+                </div>
+
+                <div>
+                    <label for="editSimNo">SIM No</label>
+                    <input type="text" id="editSimNo">
+                </div>
+
+                <div>
+                    <label for="editServiceType">Service Type</label>
+                    <input type="text" id="editServiceType">
+                </div>
+
+                <div>
+                    <label for="editAmount">Payment Received (Rs)</label>
+                    <input type="number" id="editAmount" min="0" step="0.01">
+                </div>
+
+                <div>
+                    <label for="editPaymentMode">Payment Mode</label>
+                    <select id="editPaymentMode">
+                        <option value="Cash">Cash</option>
+                        <option value="UPI">UPI</option>
+                        <option value="Cheque">Cheque</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="editCSC">Name of CSC</label>
+                    <input type="text" id="editCSC">
+                </div>
+
+                <div>
+                    <label for="editDate">Date</label>
+                    <input type="date" id="editDate">
+                </div>
+
+            </div>
+
+            <button type="button"
+                    class="save-btn"
+                    id="saveEditButton"
+                    onclick="saveEditedRecord()">
+                SAVE CHANGES
+            </button>
+
+            <button type="button"
+                    class="cancel-btn"
+                    onclick="cancelEdit()">
+                CANCEL
+            </button>
+
+            <p id="editMessage"></p>
+
+        </div>
+
+    </div>
 
 </div>
 
 <script>
+
+// ======================================
+// APPS SCRIPT URL
+// ======================================
+
 const SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbzjH45756XEUQYyiX516wqxvI7zf4pKekD2QRxd60btX7nOw0KNH3MwdViIjbYEkjI5/exec";
+"https://script.google.com/macros/s/AKfycbw0fhz3oZmtF9Ob88Q09zaReOwX5ieagG0R3DsXyv2OQ20x2c18gSHKvVtbcU5cIDiuuw/exec";
 
 let activeScript = null;
 let activeCallback = null;
 let reportTimeout = null;
 
+// ======================================
+// COMMON FUNCTIONS
+// ======================================
+
 function showMessage(message) {
     document.getElementById("message").textContent = message;
 }
 
-function resetReport() {
-    document.getElementById("transactions").textContent = "0";
-    document.getElementById("cash").textContent = "0.00";
-    document.getElementById("upi").textContent = "0.00";
-    document.getElementById("cheque").textContent = "0.00";
-    document.getElementById("grandTotal").textContent = "0.00";
-
-    document.getElementById("serviceRows").innerHTML =
-        '<tr><td colspan="3">No report data loaded.</td></tr>';
+function setButtons(disabled) {
+    document.getElementById("reportButton").disabled = disabled;
+    document.getElementById("detailButton").disabled = disabled;
 }
 
 function cleanupRequest() {
+
     if (reportTimeout !== null) {
         clearTimeout(reportTimeout);
         reportTimeout = null;
@@ -226,10 +513,23 @@ function cleanupRequest() {
         activeScript = null;
     }
 
-    document.getElementById("reportButton").disabled = false;
+    setButtons(false);
 }
 
+// ======================================
+// LOAD SUMMARY / DETAILED REPORT
+// ======================================
+
 function getReport() {
+    loadReport("report");
+}
+
+function getDetailedReport() {
+    loadReport("detailed");
+}
+
+function loadReport(action) {
+
     const date = document.getElementById("reportDate").value;
 
     if (!date) {
@@ -237,120 +537,502 @@ function getReport() {
         return;
     }
 
-    // Cancel any previous report request.
     cleanupRequest();
+    setButtons(true);
 
-    resetReport();
+    const isDetailed = action === "detailed";
 
-    document.getElementById("reportButton").disabled = true;
-    showMessage("Loading report for " + date + "...");
+    showMessage(
+        isDetailed
+        ? "Loading Detailed Report..."
+        : "Loading Summary Report..."
+    );
 
     const callbackName =
         "reportCallback_" + Date.now() + "_" +
         Math.floor(Math.random() * 100000);
 
     activeCallback = callbackName;
+
     activeScript = document.createElement("script");
 
     const thisScript = activeScript;
     const thisCallback = callbackName;
 
     reportTimeout = setTimeout(function() {
+
         if (activeCallback !== thisCallback) return;
 
         cleanupRequest();
 
         showMessage(
-            "Request timed out. Check Apps Script deployment, URL and JSONP support."
+            "Request timed out. Check Apps Script URL and deployment."
         );
-    }, 20000);
+
+    }, 30000);
 
     window[callbackName] = function(data) {
+
         if (activeCallback !== thisCallback) return;
 
         cleanupRequest();
 
         if (!data || data.status !== "success") {
+
             showMessage(
-                data && data.message
-                    ? "Report error: " + data.message
-                    : "Invalid response from Apps Script. Check doGet() and report function."
+                "Report Error: " +
+                (data && data.message
+                ? data.message
+                : "Invalid Apps Script response.")
             );
+
             return;
         }
 
-        document.getElementById("transactions").textContent =
-            Number(data.transactions || 0);
-
-        document.getElementById("cash").textContent =
-            Number(data.cash || 0).toFixed(2);
-
-        document.getElementById("upi").textContent =
-            Number(data.upi || 0).toFixed(2);
-
-        document.getElementById("cheque").textContent =
-            Number(data.cheque || 0).toFixed(2);
-
-        document.getElementById("grandTotal").textContent =
-            Number(data.grandTotal || 0).toFixed(2);
-
-        const tbody = document.getElementById("serviceRows");
-        tbody.replaceChildren();
-
-        if (!Array.isArray(data.services) || data.services.length === 0) {
-            const tr = document.createElement("tr");
-            const td = document.createElement("td");
-
-            td.colSpan = 3;
-            td.textContent = "No records found for " + date + ".";
-
-            tr.appendChild(td);
-            tbody.appendChild(tr);
+        if (isDetailed) {
+            displayDetailedReport(data, date);
         } else {
-            data.services.forEach(function(item) {
-                const tr = document.createElement("tr");
-
-                const values = [
-                    item.serviceType || "",
-                    Number(item.transactions || 0),
-                    Number(item.totalAmount || 0).toFixed(2)
-                ];
-
-                values.forEach(function(value) {
-                    const td = document.createElement("td");
-                    td.textContent = value;
-                    tr.appendChild(td);
-                });
-
-                tbody.appendChild(tr);
-            });
+            displaySummaryReport(data, date);
         }
-
-        showMessage(
-            "Report loaded for " + date +
-            ". Transactions: " + Number(data.transactions || 0)
-        );
     };
 
     thisScript.onerror = function() {
+
         if (activeCallback !== thisCallback) return;
 
         cleanupRequest();
 
         showMessage(
-            "Failed to load report. Verify the /exec URL, deployment access and Apps Script errors."
+            "Failed to load report. Check Web App URL and deployment access."
         );
     };
 
-    thisScript.src = SCRIPT_URL +
-        "?action=report" +
+    thisScript.src =
+        SCRIPT_URL +
+        "?action=" + encodeURIComponent(action) +
         "&date=" + encodeURIComponent(date) +
         "&callback=" + encodeURIComponent(callbackName) +
         "&_=" + Date.now();
 
     document.body.appendChild(thisScript);
 }
+
+// ======================================
+// DISPLAY SUMMARY REPORT
+// ======================================
+
+function displaySummaryReport(data, date) {
+
+    document.getElementById("transactions").textContent =
+        Number(data.transactions || 0);
+
+    document.getElementById("cash").textContent =
+        Number(data.cash || 0).toFixed(2);
+
+    document.getElementById("upi").textContent =
+        Number(data.upi || 0).toFixed(2);
+
+    document.getElementById("cheque").textContent =
+        Number(data.cheque || 0).toFixed(2);
+
+    document.getElementById("grandTotal").textContent =
+        Number(data.grandTotal || 0).toFixed(2);
+
+    const tbody = document.getElementById("serviceRows");
+
+    tbody.replaceChildren();
+
+    if (!Array.isArray(data.services) ||
+        data.services.length === 0) {
+
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+
+        td.colSpan = 3;
+        td.textContent = "No records found for " + date;
+
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+
+    } else {
+
+        data.services.forEach(function(item) {
+
+            const tr = document.createElement("tr");
+
+            const values = [
+                item.serviceType || "",
+                Number(item.transactions || 0),
+                Number(item.totalAmount || 0).toFixed(2)
+            ];
+
+            values.forEach(function(value) {
+
+                const td = document.createElement("td");
+                td.textContent = value;
+                tr.appendChild(td);
+
+            });
+
+            tbody.appendChild(tr);
+
+        });
+    }
+
+    showMessage(
+        "Summary Report Loaded Successfully. Date: " + date
+    );
+}
+
+// ======================================
+// DISPLAY DETAILED REPORT IN POPUP
+// ======================================
+
+function displayDetailedReport(data, date) {
+
+    const tbody = document.getElementById("detailRows");
+
+    tbody.replaceChildren();
+
+    document.getElementById("popupDate").textContent =
+        "Detailed Transactions - " + date;
+
+    document.getElementById("editForm").style.display = "none";
+
+    if (!Array.isArray(data.records) ||
+        data.records.length === 0) {
+
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+
+        td.colSpan = 11;
+        td.textContent = "No records found for " + date;
+
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+
+        document.getElementById("detailModal").style.display = "block";
+
+        showMessage("No detailed records found for " + date);
+
+        return;
+    }
+
+    data.records.forEach(function(item, index) {
+
+        const tr = document.createElement("tr");
+
+        const values = [
+            index + 1,
+            item.customerName || "",
+            item.mobileNo || "",
+            item.simNo || "",
+            item.serviceType || "",
+            Number(item.amount || 0).toFixed(2),
+            item.paymentMode || "",
+            item.date || date
+        ];
+
+        values.forEach(function(value) {
+
+            const td = document.createElement("td");
+            td.textContent = value;
+            tr.appendChild(td);
+
+        });
+
+        // EDIT BUTTON
+
+        const actionTd = document.createElement("td");
+        const editButton = document.createElement("button");
+
+        editButton.type = "button";
+        editButton.className = "edit-btn";
+        editButton.textContent = "EDIT";
+
+        editButton.addEventListener("click", function() {
+            editRecord(item);
+        });
+
+        actionTd.appendChild(editButton);
+        tr.appendChild(actionTd);
+
+        tbody.appendChild(tr);
+
+    });
+
+    document.getElementById("detailModal").style.display = "block";
+
+    showMessage(
+        "Detailed Report Loaded Successfully. Total Transactions: " +
+        data.records.length + " | Date: " + date
+    );
+}
+
+// ======================================
+// EDIT RECORD
+// ======================================
+
+function editRecord(item) {
+
+    if (!item.sheetRow) {
+        alert(
+            "Sheet row number is missing. Please add sheetRow in Apps Script."
+        );
+        return;
+    }
+
+    document.getElementById("editRow").value = item.sheetRow;
+
+    document.getElementById("editCustomerName").value =
+        item.customerName || "";
+
+    document.getElementById("editMobileNo").value =
+        item.mobileNo || "";
+
+    document.getElementById("editSimNo").value =
+        item.simNo || "";
+
+    document.getElementById("editServiceType").value =
+        item.serviceType || "";
+
+    document.getElementById("editAmount").value =
+        Number(item.amount || 0);
+
+    document.getElementById("editPaymentMode").value =
+        normalizePaymentMode(item.paymentMode);
+
+    document.getElementById("editCSC").value =
+        item.cscName || "";
+
+    document.getElementById("editDate").value =
+        normalizeDate(item.date);
+
+    document.getElementById("editMessage").textContent = "";
+
+    document.getElementById("editForm").style.display = "block";
+
+    document.getElementById("editForm").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+
+// ======================================
+// NORMALIZE PAYMENT MODE
+// ======================================
+
+function normalizePaymentMode(mode) {
+
+    const value = String(mode || "").trim().toLowerCase();
+
+    if (value === "cash") return "Cash";
+    if (value === "upi") return "UPI";
+    if (value === "cheque" || value === "chaque") return "Cheque";
+
+    return "Cash";
+}
+
+// ======================================
+// NORMALIZE DATE
+// ======================================
+
+function normalizeDate(value) {
+
+    if (!value) return "";
+
+    const str = String(value).trim();
+
+    if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
+        return str;
+    }
+
+    const d = new Date(str);
+
+    if (isNaN(d.getTime())) return "";
+
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+
+    return year + "-" + month + "-" + day;
+}
+
+// ======================================
+// CANCEL EDIT
+// ======================================
+
+function cancelEdit() {
+
+    document.getElementById("editForm").style.display = "none";
+    document.getElementById("editMessage").textContent = "";
+}
+
+// ======================================
+// SAVE EDITED RECORD
+// ======================================
+
+function saveEditedRecord() {
+
+    const saveButton = document.getElementById("saveEditButton");
+    const editMessage = document.getElementById("editMessage");
+
+    const data = {
+        row: document.getElementById("editRow").value,
+        customerName: document.getElementById("editCustomerName").value.trim(),
+        mobileNo: document.getElementById("editMobileNo").value.trim(),
+        simNo: document.getElementById("editSimNo").value.trim(),
+        serviceType: document.getElementById("editServiceType").value.trim(),
+        amount: document.getElementById("editAmount").value,
+        paymentMode: document.getElementById("editPaymentMode").value,
+        cscName: document.getElementById("editCSC").value.trim(),
+        date: document.getElementById("editDate").value
+    };
+
+    if (!data.row || !data.customerName || !data.mobileNo ||
+        !data.serviceType || data.amount === "" || !data.date) {
+
+        editMessage.textContent = "Please fill all required fields.";
+        editMessage.style.color = "red";
+        return;
+    }
+
+    if (!/^\d{10}$/.test(data.mobileNo)) {
+        editMessage.textContent = "Please enter a valid 10 digit mobile number.";
+        editMessage.style.color = "red";
+        return;
+    }
+
+    if (Number(data.amount) < 0 || !Number.isFinite(Number(data.amount))) {
+        editMessage.textContent = "Please enter a valid amount.";
+        editMessage.style.color = "red";
+        return;
+    }
+
+    saveButton.disabled = true;
+    saveButton.textContent = "SAVING...";
+
+    editMessage.textContent = "Saving changes...";
+    editMessage.style.color = "#0875c9";
+
+    const callbackName =
+        "updateCallback_" + Date.now() + "_" +
+        Math.floor(Math.random() * 100000);
+
+    const script = document.createElement("script");
+
+    let finished = false;
+
+    function finish() {
+
+        if (finished) return;
+
+        finished = true;
+        clearTimeout(timeout);
+
+        delete window[callbackName];
+        script.remove();
+
+        saveButton.disabled = false;
+        saveButton.textContent = "SAVE CHANGES";
+    }
+
+    const timeout = setTimeout(function() {
+
+        finish();
+
+        editMessage.textContent =
+            "Request timed out. Please check Apps Script deployment.";
+
+        editMessage.style.color = "red";
+
+    }, 30000);
+
+    window[callbackName] = function(response) {
+
+        if (finished) return;
+
+        finish();
+
+        if (!response || response.status !== "success") {
+
+            editMessage.textContent =
+                response && response.message
+                ? response.message
+                : "Unable to save record.";
+
+            editMessage.style.color = "red";
+            return;
+        }
+
+        editMessage.textContent = "Record updated successfully!";
+        editMessage.style.color = "green";
+
+        // Reload report after successful update
+
+        document.getElementById("reportDate").value = data.date;
+
+        setTimeout(function() {
+
+            document.getElementById("editForm").style.display = "none";
+
+            loadReport("detailed");
+
+            showMessage("Record updated successfully.");
+
+        }, 800);
+    };
+
+    script.onerror = function() {
+
+        if (finished) return;
+
+        finish();
+
+        editMessage.textContent =
+            "Failed to connect to Apps Script.";
+
+        editMessage.style.color = "red";
+    };
+
+    const params = new URLSearchParams();
+
+    params.append("action", "update");
+    params.append("callback", callbackName);
+
+    Object.keys(data).forEach(function(key) {
+        params.append(key, data[key]);
+    });
+
+    params.append("_", Date.now());
+
+    script.src = SCRIPT_URL + "?" + params.toString();
+
+    document.body.appendChild(script);
+}
+
+// ======================================
+// CLOSE POPUP
+// ======================================
+
+function closeDetailedPopup() {
+
+    document.getElementById("detailModal").style.display = "none";
+    document.getElementById("editForm").style.display = "none";
+}
+
+// Close popup when clicking outside it
+
+document.getElementById("detailModal").addEventListener("click", function(event) {
+
+    if (event.target === this) {
+        closeDetailedPopup();
+    }
+
+});
+
 </script>
 
 </body>
 </html>
+```
