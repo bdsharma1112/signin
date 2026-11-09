@@ -1,516 +1,328 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-    <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Ankit Telecommunication - Login</title>
-
-
-    <style>
-
-        * {
-            box-sizing: border-box;
-        }
-
-
-        body {
-
-            margin: 0;
-
-            font-family: Arial, sans-serif;
-
-            min-height: 100vh;
-
-            display: flex;
-
-            justify-content: center;
-
-            align-items: center;
-
-            overflow: hidden;
-
-            background: #07152b;
-
-            position: relative;
-
-        }
-
-
-        /* =========================
-           LIQUID BACKGROUND
-        ========================= */
-
-        .liquid {
-
-            position: absolute;
-
-            width: 700px;
-
-            height: 700px;
-
-            border-radius: 45% 55% 60% 40%;
-
-            background: linear-gradient(
-                green,
-                red,
-                yellow
-            );
-
-            opacity: 0.65;
-
-            filter: blur(2px);
-
-            animation: liquidMove 8s ease-in-out infinite;
-
-        }
-
-
-        .liquid::before {
-
-            content: "";
-
-            position: absolute;
-
-            width: 600px;
-
-            height: 600px;
-
-            top: -120px;
-
-            left: 180px;
-
-            border-radius: 60% 40% 45% 55%;
-
-            background: linear-gradient(
-                135deg,
-                pink,
-                #4facfe
-            );
-
-            opacity: 0.55;
-
-            animation: liquidMove2 10s ease-in-out infinite;
-
-        }
-
-
-        .liquid::after {
-
-            content: "";
-
-            position: absolute;
-
-            width: 500px;
-
-            height: 500px;
-
-            left: -180px;
-
-            bottom: -100px;
-
-            border-radius: 40% 60% 55% 45%;
-
-            background: #00c6ff;
-
-            opacity: 0.4;
-
-            animation: liquidMove3 7s ease-in-out infinite;
-
-        }
-
-
-        @keyframes liquidMove {
-
-            0% {
-
-                transform:
-                    translate(-250px, -100px)
-                    rotate(0deg);
-
-                border-radius:
-                    45% 55% 60% 40%;
-
-            }
-
-            50% {
-
-                transform:
-                    translate(250px, 120px)
-                    rotate(180deg);
-
-                border-radius:
-                    60% 40% 45% 55%;
-
-            }
-
-            100% {
-
-                transform:
-                    translate(-250px, -100px)
-                    rotate(360deg);
-
-                border-radius:
-                    45% 55% 60% 40%;
-
-            }
-
-        }
-
-
-        @keyframes liquidMove2 {
-
-            0% {
-
-                transform:
-                    translate(0, 0)
-                    rotate(0deg);
-
-            }
-
-            50% {
-
-                transform:
-                    translate(-180px, 150px)
-                    rotate(180deg);
-
-            }
-
-            100% {
-
-                transform:
-                    translate(0, 0)
-                    rotate(360deg);
-
-            }
-
-        }
-
-
-        @keyframes liquidMove3 {
-
-            0% {
-
-                transform:
-                    translate(0, 0);
-
-            }
-
-            50% {
-
-                transform:
-                    translate(180px, -150px);
-
-            }
-
-            100% {
-
-                transform:
-                    translate(0, 0);
-
-            }
-
-        }
-
-
-        /* =========================
-           LOGIN BOX
-        ========================= */
-
-        .login-box {
-
-            position: relative;
-
-            z-index: 10;
-
-            width: 360px;
-
-            padding: 35px;
-
-            border-radius: 20px;
-
-            background:
-                rgba(255, 255, 255, 0.15);
-
-            backdrop-filter: blur(18px);
-
-            -webkit-backdrop-filter: blur(18px);
-
-            border:
-                1px solid
-                rgba(255,255,255,0.3);
-
-            box-shadow:
-                0 20px 50px
-                rgba(0,0,0,0.35);
-
-            text-align: center;
-
-            color: white;
-
-        }
-
-
-        .login-box h1 {
-
-            margin-bottom: 5px;
-
-        }
-
-
-        .login-box p {
-
-            margin-top: 0;
-
-            margin-bottom: 25px;
-
-            opacity: 0.8;
-
-        }
-
-
-        /* =========================
-           INPUT
-        ========================= */
-
-        .input-box {
-
-            margin-bottom: 18px;
-
-        }
-
-
-        .input-box input {
-
-            width: 100%;
-
-            padding: 13px;
-
-            border: none;
-
-            outline: none;
-
-            border-radius: 8px;
-
-            background:
-                rgba(255,255,255,0.9);
-
-            font-size: 15px;
-
-        }
-
-
-        /* =========================
-           BUTTON
-        ========================= */
-
-        .login-button {
-
-            width: 100%;
-
-            padding: 13px;
-
-            border: none;
-
-            border-radius: 8px;
-
-            background:
-                linear-gradient(
-                    90deg,
-                    #00c6ff,
-                    #0072ff
-                );
-
-            color: white;
-
-            font-size: 16px;
-
-            font-weight: bold;
-
-            cursor: pointer;
-
-            transition: 0.3s;
-
-        }
-
-
-        .login-button:hover {
-
-            transform: scale(1.03);
-
-            box-shadow:
-                0 5px 20px
-                rgba(0,198,255,0.5);
-
-        }
-
-
-        /* =========================
-           SIGN UP
-        ========================= */
-
-        .signup-button {
-
-            margin-top: 15px;
-
-            background: transparent;
-
-            border: none;
-
-            color: white;
-
-            cursor: pointer;
-
-            text-decoration: underline;
-
-        }
-
-
-        /* =========================
-           LOADING
-        ========================= */
-
-        #loading {
-
-            display: none;
-
-            margin-top: 15px;
-
-        }
-
-
-        .spinner {
-
-            width: 30px;
-
-            height: 30px;
-
-            border: 4px solid
-                rgba(255,255,255,0.3);
-
-            border-top: 4px solid white;
-
-            border-radius: 50%;
-
-            margin: auto;
-
-            animation:
-                spin 1s linear infinite;
-
-        }
-
-
-        @keyframes spin {
-
-            100% {
-
-                transform:
-                    rotate(360deg);
-
-            }
-
-        }
-
-
-        /* =========================
-           MOBILE
-        ========================= */
-
-        @media(max-width:500px) {
-
-            .login-box {
-
-                width: 90%;
-
-                padding: 25px;
-
-            }
-
-            .liquid {
-
-                width: 500px;
-
-                height: 500px;
-
-            }
-
-        }
-
-    </style>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Ankit Telecommunication - Login</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+    background: #07152b;
+    padding: 20px;
+}
+
+.liquid {
+    position: fixed;
+    width: 700px;
+    height: 700px;
+    border-radius: 45% 55% 60% 40%;
+    background: linear-gradient(green, red, yellow);
+    opacity: 0.65;
+    filter: blur(2px);
+    animation: liquidMove 8s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.liquid::before {
+    content: "";
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    top: -120px;
+    left: 180px;
+    border-radius: 60% 40% 45% 55%;
+    background: linear-gradient(135deg, pink, #4facfe);
+    opacity: 0.55;
+}
+
+.liquid::after {
+    content: "";
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    left: -180px;
+    bottom: -100px;
+    border-radius: 40% 60% 55% 45%;
+    background: #00c6ff;
+    opacity: 0.4;
+}
+
+@keyframes liquidMove {
+    0% {
+        transform: translate(-250px,-100px) rotate(0deg);
+    }
+    50% {
+        transform: translate(250px,120px) rotate(180deg);
+    }
+    100% {
+        transform: translate(-250px,-100px) rotate(360deg);
+    }
+}
+
+.login-box {
+    position: relative;
+    z-index: 10;
+    width: 380px;
+    max-width: 100%;
+    padding: 30px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255,255,255,0.3);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+    text-align: center;
+    color: white;
+}
+
+h2 {
+    margin-top: 0;
+    font-size: 25px;
+}
+
+.subtitle {
+    opacity: 0.8;
+    margin-bottom: 25px;
+}
+
+.input-box {
+    margin-bottom: 16px;
+}
+
+.input-box input {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    outline: none;
+    border-radius: 8px;
+    font-size: 15px;
+    background: rgba(255,255,255,0.95);
+}
+
+button {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(90deg,#00c6ff,#0072ff);
+    color: pink;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+
+button:hover {
+    opacity: 0.9;
+}
+button:hover {
+            background: green;
+	}
+
+.link {
+    display: block;
+    margin-top: 17px;
+    color: black;
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: 12px;
+	background:bule;
+}
+
+.hidden {
+    display: none;
+}
+
+.message {
+    margin-top: 15px;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+}
+
+#loading {
+    display: none;
+    margin-top: 15px;
+}
+
+.spinner {
+    width: 30px;
+    height: 30px;
+    border: 4px solid rgba(255,255,255,0.3);
+    border-top: 4px solid white;
+    border-radius: 50%;
+    margin: auto;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+
+@media(max-width:500px) {
+    .login-box {
+        padding: 23px;
+    }
+
+    .liquid {
+        width: 500px;
+        height: 500px;
+    }
+}
+
+</style>
 </head>
-
 
 <body>
 
-
-<!-- LIQUID ANIMATION -->
-
 <div class="liquid"></div>
-
-
-<!-- LOGIN BOX -->
 
 <div class="login-box">
 
-    <h1>
-        Ankit Telecommunication
-    </h1>
+    <!-- LOGIN SECTION -->
 
-    <p>
-        User Login
-    </p>
+    <div id="loginSection">
 
+        <h2>Ankit Telecommunication</h2>
 
-    <div class="input-box">
+        <p class="subtitle">User Login</p>
 
-        <input
-            type="text"
-            id="userId"
-            placeholder="User ID">
+        <div class="input-box">
+            <input
+                type="text"
+                id="userId"
+                placeholder="User ID"
+                autocomplete="username">
+        </div>
+
+        <div class="input-box">
+            <input
+                type="password"
+                id="password"
+                placeholder="Password"
+                autocomplete="current-password">
+        </div>
+
+        <button id="loginBtn" onclick="loginUser()">
+            LOGIN
+        </button>
+		
+        <span class="link" onclick="showForgot()">
+            Forgot Password?
+        </span>
+
+        <span class="link"
+              onclick="window.location.href='signup.html'">
+           if you have not a account please click here for Create New Account
+        </span>
 
     </div>
 
 
-    <div class="input-box">
+    <!-- FORGOT PASSWORD SECTION -->
 
-        <input
-            type="password"
-            id="password"
-            placeholder="Password">
+    <div id="forgotSection" class="hidden">
+
+        <h2>Forgot Password</h2>
+
+        <p class="subtitle">
+            Enter Your Registered Email ID
+        </p>
+
+        <div class="input-box">
+
+            <input
+                type="email"
+                id="forgotEmail"
+                placeholder="Registered Email ID"
+                autocomplete="email">
+
+        </div>
+
+        <button onclick="sendOTP()" id="otpBtn">
+            SEND OTP
+        </button>
+
+        <span class="link" onclick="showLogin()">
+            Back to Login
+        </span>
+
+        <div id="otpMessage" class="message"></div>
 
     </div>
 
 
-    <button
-        class="login-button"
-        onclick="loginUser()">
+    <!-- RESET PASSWORD SECTION -->
 
-        LOGIN
+    <div id="resetSection" class="hidden">
 
-    </button>
+        <h2>Reset Password</h2>
 
+        <p class="subtitle">
+            Enter Email OTP and New Password
+        </p>
 
-    <button
-        class="signup-button"
-        onclick="window.location.href='signup.html'">
+        <div class="input-box">
 
-        Create New Account
+            <input
+                type="text"
+                id="otp"
+                placeholder="Enter 6 Digit OTP"
+                maxlength="6"
+                inputmode="numeric">
+        </div>
 
-    </button>
+        <div class="input-box">
+
+            <input
+                type="password"
+                id="newPassword"
+                placeholder="New Password (Minimum 8 Characters)"
+                autocomplete="new-password">
+        </div>
+
+        <div class="input-box">
+
+            <input
+                type="password"
+                id="confirmPassword"
+                placeholder="Confirm New Password"
+                autocomplete="new-password">
+        </div>
+
+        <button onclick="resetPassword()" id="resetBtn">
+            RESET PASSWORD
+        </button>
+
+        <span class="link" onclick="showForgot()">
+            Resend OTP
+        </span>
+
+        <span class="link" onclick="showLogin()">
+            Back to Login
+        </span>
+
+        <div id="resetMessage" class="message"></div>
+
+    </div>
 
 
     <div id="loading">
-
         <div class="spinner"></div>
-
-        <p>Checking Login...</p>
-
+        <p>Please Wait...</p>
     </div>
 
 </div>
@@ -518,109 +330,284 @@
 
 <script>
 
+// ======================================
+// APPS SCRIPT WEB APP URL
+// ======================================
 
 var SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbzJDsjKIzmgDnhZWmyjfF8AR-vn6yEz-FyyNtxNJwvsIK7mRT_hzQTy8JBje4WaRXR63A/exec";
+"https://script.google.com/macros/s/AKfycbzgZbjiNwJx3J7kVQ9T0gRPV9jSmfcQCbCj2OU9FWYaziwHxd3tWSX8wj6xTHS3zvoJTA/exec";
 
+
+// ======================================
+// SHOW / HIDE SECTIONS
+// ======================================
+
+function hideAll() {
+
+    document.getElementById("loginSection").classList.add("hidden");
+
+    document.getElementById("forgotSection").classList.add("hidden");
+
+    document.getElementById("resetSection").classList.add("hidden");
+
+}
+
+function showLogin() {
+
+    hideAll();
+
+    document.getElementById("loginSection").classList.remove("hidden");
+
+}
+
+function showForgot() {
+
+    hideAll();
+
+    document.getElementById("forgotSection").classList.remove("hidden");
+
+}
+
+function showReset() {
+
+    hideAll();
+
+    document.getElementById("resetSection").classList.remove("hidden");
+
+}
+
+
+// ======================================
+// LOADING
+// ======================================
+
+function setLoading(show) {
+
+    document.getElementById("loading").style.display =
+        show ? "block" : "none";
+
+}
+
+
+// ======================================
+// LOGIN
+// ======================================
 
 function loginUser() {
 
+    var userId = document.getElementById("userId").value.trim();
 
-    var userId =
-        document.getElementById("userId")
-        .value.trim();
+    var password = document.getElementById("password").value;
 
-
-    var password =
-        document.getElementById("password")
-        .value.trim();
-
-
-    if (userId === "") {
-
-        alert("Please enter User ID");
-
+    if (!userId || !password) {
+        alert("Please enter User ID and Password");
         return;
-
     }
 
+    setLoading(true);
 
-    if (password === "") {
-
-        alert("Please enter Password");
-
-        return;
-
-    }
-
-
-    document.getElementById("loading")
-        .style.display = "block";
-
-
-    var url =
-        SCRIPT_URL +
+    var url = SCRIPT_URL +
         "?action=login" +
-        "&userId=" +
-        encodeURIComponent(userId) +
-        "&password=" +
-        encodeURIComponent(password);
-
+        "&userId=" + encodeURIComponent(userId) +
+        "&password=" + encodeURIComponent(password);
 
     fetch(url)
 
-        .then(function(response) {
+    .then(function(response) {
+        return response.json();
+    })
 
-            return response.json();
+    .then(function(data) {
 
-        })
+        setLoading(false);
 
+        if (data.status === "success") {
 
-        .then(function(data) {
+            sessionStorage.setItem("loginStatus","success");
 
+            sessionStorage.setItem("userId",data.userId);
 
-            document.getElementById("loading")
-                .style.display = "none";
+            sessionStorage.setItem("fullName",data.fullName);
 
+            window.location.href = "home.html";
 
-          if (data.status === "success") {
+        } else {
 
-    		sessionStorage.setItem("loginStatus", "success");
+            alert(data.message || "Invalid Login");
 
-   		 window.location.href = "home.html";
+        }
 
-            }
+    })
 
-            else {
+    .catch(function(error) {
 
-                alert(
-                    data.message ||
-                    "Invalid User ID or Password"
-                );
+        setLoading(false);
 
-            }
+        console.log(error);
 
-        })
+        alert("Connection Error");
 
+    });
 
-        .catch(function(error) {
-
-
-            document.getElementById("loading")
-                .style.display = "none";
+}
 
 
-            console.log(error);
+// ======================================
+// SEND EMAIL OTP
+// ======================================
 
-            alert("Connection Error");
+function sendOTP() {
 
-        });
+    var email = document.getElementById("forgotEmail")
+        .value.trim();
+
+    if (!email) {
+        alert("Please enter Registered Email ID");
+        return;
+    }
+
+    setLoading(true);
+
+    document.getElementById("otpBtn").disabled = true;
+
+    var url = SCRIPT_URL +
+        "?action=sendotp" +
+        "&email=" + encodeURIComponent(email);
+
+    fetch(url)
+
+    .then(function(response) {
+        return response.json();
+    })
+
+    .then(function(data) {
+
+        setLoading(false);
+
+        document.getElementById("otpBtn").disabled = false;
+
+        if (data.status === "success") {
+
+            showReset();
+
+            document.getElementById("otpMessage").textContent =
+                data.message;
+
+        } else {
+
+            document.getElementById("otpMessage").textContent =
+                data.message;
+
+        }
+
+    })
+
+    .catch(function(error) {
+
+        setLoading(false);
+
+        document.getElementById("otpBtn").disabled = false;
+
+        console.log(error);
+
+        alert("Unable to send OTP. Check connection.");
+
+    });
+
+}
+
+
+// ======================================
+// RESET PASSWORD
+// ======================================
+
+function resetPassword() {
+
+    var email = document.getElementById("forgotEmail")
+        .value.trim();
+
+    var otp = document.getElementById("otp")
+        .value.trim();
+
+    var newPassword = document.getElementById("newPassword")
+        .value;
+
+    var confirmPassword = document.getElementById("confirmPassword")
+        .value;
+
+    if (!/^[0-9]{6}$/.test(otp)) {
+        alert("Enter valid 6 digit OTP");
+        return;
+    }
+
+    if (newPassword.length < 8) {
+        alert("Password must be at least 8 characters");
+        return;
+    }
+
+    if (newPassword !== confirmPassword) {
+        alert("New Password and Confirm Password do not match");
+        return;
+    }
+
+    setLoading(true);
+
+    document.getElementById("resetBtn").disabled = true;
+
+    var url = SCRIPT_URL +
+        "?action=resetpassword" +
+        "&email=" + encodeURIComponent(email) +
+        "&otp=" + encodeURIComponent(otp) +
+        "&newPassword=" + encodeURIComponent(newPassword);
+
+    fetch(url)
+
+    .then(function(response) {
+        return response.json();
+    })
+
+    .then(function(data) {
+
+        setLoading(false);
+
+        document.getElementById("resetBtn").disabled = false;
+
+        document.getElementById("resetMessage").textContent =
+            data.message;
+
+        if (data.status === "success") {
+
+            alert("Password Reset Successfully!");
+
+            document.getElementById("otp").value = "";
+
+            document.getElementById("newPassword").value = "";
+
+            document.getElementById("confirmPassword").value = "";
+
+            document.getElementById("forgotEmail").value = "";
+
+            showLogin();
+
+        }
+
+    })
+
+    .catch(function(error) {
+
+        setLoading(false);
+
+        document.getElementById("resetBtn").disabled = false;
+
+        console.log(error);
+
+        alert("Connection Error");
+
+    });
 
 }
 
 </script>
 
-
 </body>
-
 </html>
