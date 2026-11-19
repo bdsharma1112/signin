@@ -1,0 +1,260 @@
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Get Report Summary</title>
+<style>
+*{box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:#f2f2f2;margin:0;padding:15px}
+.container{max-width:950px;margin:auto;background:#fff;padding:20px;border-radius:10px}
+h2{background:#2196F3;color:#fff;text-align:center;padding:15px;margin-top:0}
+h3{margin-top:25px}
+label{display:block;font-weight:bold;margin:15px 0 5px}
+input,select,button{padding:11px;font-size:15px;border-radius:5px}
+input,select{border:1px solid #bbb;width:100%}
+button{background:#2196F3;color:#fff;border:0;cursor:pointer;margin:12px 5px 0 0}
+button:hover{background:#0875c9}
+button:disabled{background:#888;cursor:wait}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:20px}
+.card{background:#eaf4ff;padding:15px;border-radius:8px;text-align:center;overflow-wrap:anywhere}
+.card h3{font-size:14px;margin:0 0 10px}
+.amount{font-size:21px;font-weight:bold}
+.table-wrap{overflow-x:auto;margin-top:15px}
+table{width:100%;border-collapse:collapse;min-width:450px}
+th,td{border:1px solid #ccc;padding:10px;text-align:left}
+th{background:#2196F3;color:#fff}
+#message{margin-top:15px;overflow-wrap:anywhere;font-weight:bold}
+.filter-row{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+@media(max-width:600px){.container{padding:12px}.filter-row{grid-template-columns:1fr}button{width:100%;margin-right:0}}
+</style>
+</head>
+<body>
+<div class="container">
+    <h2>GET REPORT SUMMARY</h2>
+
+    <div class="filter-row">
+        <div>
+            <label for="reportDate">SELECT DATE</label>
+            <input type="date" id="reportDate" required>
+        </div>
+        <div>
+            <label for="serviceFilter">FILTER BY SERVICE TYPE / ITEM</label>
+            <select id="serviceFilter" onchange="applyItemFilter()">
+                <option value="ALL">ALL ITEMS</option>
+				<option value="ALL">swap</option>
+            </select>
+        </div>
+    </div>
+
+    <button type="button" id="reportButton" onclick="getReport()">GET REPORT</button>
+    <p id="message">Please select a date and click GET REPORT.</p>
+
+    <div class="cards">
+        <div class="card"><h3>TOTAL TRANSACTIONS</h3><div class="amount" id="transactions">0</div></div>
+        <div class="card"><h3>TOTAL CASH (Rs)</h3><div class="amount" id="cash">0.00</div></div>
+        <div class="card"><h3>TOTAL UPI (Rs)</h3><div class="amount" id="upi">0.00</div></div>
+        <div class="card"><h3>TOTAL CHEQUE (Rs)</h3><div class="amount" id="cheque">0.00</div></div>
+        <div class="card"><h3>GRAND TOTAL PAYMENT RECEIVED (Rs)</h3><div class="amount" id="grandTotal">0.00</div></div>
+    </div>
+
+    <h3>SERVICE TYPE — ITEM WISE TRANSACTIONS</h3>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Service Type</th><th>Transactions</th><th>Total Amount (Rs)</th></tr></thead>
+            <tbody id="serviceRows"><tr><td colspan="3">Select a date to view report.</td></tr></tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+"use strict";
+
+// Keep your deployed Apps Script Web App URL here.
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw_LgeiNYF4cL8EyBZ4fOWZHymbD7Zu4H9GMk64NXvYyhqdrCauIa267vQM1-zZ7ws/exec";
+
+let activeScript = null;
+let activeCallback = null;
+let reportTimeout = null;
+let currentServices = [];
+
+function showMessage(message) {
+    document.getElementById("message").textContent = message;
+}
+
+function setLoading(isLoading) {
+    document.getElementById("reportButton").disabled = isLoading;
+    document.getElementById("reportButton").textContent =
+        isLoading ? "LOADING..." : "GET REPORT";
+}
+
+function cleanupRequest() {
+    if (reportTimeout !== null) {
+        clearTimeout(reportTimeout);
+        reportTimeout = null;
+    }
+    if (activeCallback) {
+        delete window[activeCallback];
+        activeCallback = null;
+    }
+    if (activeScript) {
+        activeScript.onerror = null;
+        activeScript.remove();
+        activeScript = null;
+    }
+    setLoading(false);
+}
+
+function resetReport() {
+    document.getElementById("transactions").textContent = "0";
+    document.getElementById("cash").textContent = "0.00";
+    document.getElementById("upi").textContent = "0.00";
+    document.getElementById("cheque").textContent = "0.00";
+    document.getElementById("grandTotal").textContent = "0.00";
+    document.getElementById("serviceRows").innerHTML =
+        '<tr><td colspan="3">No report data loaded.</td></tr>';
+    currentServices = [];
+    document.getElementById("serviceFilter").innerHTML =
+        '<option value="ALL">ALL ITEMS</option>';
+}
+
+function getReport() {
+    const date = document.getElementById("reportDate").value;
+    if (!date) {
+        showMessage("Please select date.");
+        return;
+    }
+
+    cleanupRequest();
+    resetReport();
+    setLoading(true);
+    showMessage("Loading report for " + date + "...");
+
+    const callbackName = "reportCallback_" + Date.now() + "_" +
+        Math.floor(Math.random() * 100000);
+    activeCallback = callbackName;
+
+    const script = document.createElement("script");
+    activeScript = script;
+    const thisCallback = callbackName;
+
+    reportTimeout = setTimeout(function() {
+        if (activeCallback !== thisCallback) return;
+        cleanupRequest();
+        showMessage("Request timed out. Check Apps Script URL, deployment access and JSONP response.");
+    }, 30000);
+
+    window[callbackName] = function(data) {
+        if (activeCallback !== thisCallback) return;
+        cleanupRequest();
+
+        if (!data || data.status !== "success") {
+            showMessage("Report error: " +
+                (data && data.message ? data.message : "Invalid response from Apps Script."));
+            return;
+        }
+
+        displaySummaryReport(data, date);
+    };
+
+    script.onerror = function() {
+        if (activeCallback !== thisCallback) return;
+        cleanupRequest();
+        showMessage("Failed to load report. Verify the /exec URL, deployment access and Apps Script JSONP support.");
+    };
+
+    script.src = SCRIPT_URL +
+        "?action=report" +
+        "&date=" + encodeURIComponent(date) +
+        "&callback=" + encodeURIComponent(callbackName) +
+        "&_=" + Date.now();
+
+    document.body.appendChild(script);
+}
+
+function displaySummaryReport(data, date) {
+    // These five cards show the complete day's totals returned by Apps Script.
+    document.getElementById("transactions").textContent =
+        Number(data.transactions || 0);
+    document.getElementById("cash").textContent =
+        Number(data.cash || 0).toFixed(2);
+    document.getElementById("upi").textContent =
+        Number(data.upi || 0).toFixed(2);
+    document.getElementById("cheque").textContent =
+        Number(data.cheque || 0).toFixed(2);
+    document.getElementById("grandTotal").textContent =
+        Number(data.grandTotal || 0).toFixed(2);
+
+    currentServices = Array.isArray(data.services) ? data.services : [];
+    populateServiceFilter(currentServices);
+    renderServiceRows();
+
+    showMessage("Summary report loaded successfully. Date: " + date);
+}
+
+function populateServiceFilter(items) {
+    const filter = document.getElementById("serviceFilter");
+    const oldValue = filter.value || "ALL";
+
+    filter.innerHTML = "";
+    const allOption = document.createElement("option");
+    allOption.value = "ALL";
+    allOption.textContent = "ALL ITEMS";
+    filter.appendChild(allOption);
+
+    const names = [...new Set(items
+        .map(item => String(item.serviceType || "").trim())
+        .filter(Boolean))].sort();
+
+    names.forEach(function(name) {
+        const option = document.createElement("option");
+        option.value = name;
+        option.textContent = name;
+        filter.appendChild(option);
+    });
+
+    filter.value = names.includes(oldValue) ? oldValue : "ALL";
+}
+
+function applyItemFilter() {
+    renderServiceRows();
+}
+
+function renderServiceRows() {
+    const tbody = document.getElementById("serviceRows");
+    tbody.replaceChildren();
+
+    const selected = document.getElementById("serviceFilter").value;
+    const filtered = selected === "ALL"
+        ? currentServices
+        : currentServices.filter(item =>
+            String(item.serviceType || "").trim() === selected
+        );
+
+    if (filtered.length === 0) {
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+        td.colSpan = 3;
+        td.textContent = "No records found for selected item.";
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+        return;
+    }
+
+    filtered.forEach(function(item) {
+        const tr = document.createElement("tr");
+        [
+            item.serviceType || "",
+            Number(item.transactions || 0),
+            Number(item.totalAmount || 0).toFixed(2)
+        ].forEach(function(value) {
+            const td = document.createElement("td");
+            td.textContent = value;
+            tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+    });
+}
+</script>
+</body>
+</html>
