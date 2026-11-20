@@ -22,18 +22,22 @@ body {
 .container {
     max-width: 850px;
     margin: auto;
-    background: gray;
+    background: skyblue;
     padding: 20px;
     border-radius: 10px;
-    color: white;
+    color: black;
 }
 
 h2 {
     background: #2196F3;
-    color: white;
+    color: brown;
     text-align: center;
     padding: 15px;
     margin-top: 0;
+}
+
+h3 {
+    margin-top: 20px;
 }
 
 label {
@@ -58,6 +62,7 @@ input, button {
     padding: 11px;
     font-size: 15px;
     border-radius: 5px;
+	
 }
 
 input {
@@ -69,10 +74,15 @@ input {
 
 button {
     background: #2196F3;
-    color: white;
+    color: black;
     border: 0;
     cursor: pointer;
-    margin-top: 15px;
+    margin: 15px 5px 0 0;
+	font-weight: bold;
+}
+
+#transactionButton {
+    background: #16834a;
 }
 
 button:disabled {
@@ -98,6 +108,7 @@ button:disabled {
 .card h3 {
     font-size: 14px;
     color: blue;
+    margin-top: 0;
 }
 
 .amount {
@@ -109,12 +120,15 @@ button:disabled {
 .table-wrap {
     overflow-x: auto;
     margin-top: 20px;
+	
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
     min-width: 400px;
+    background: white;
+    color: blue;
 }
 
 th, td {
@@ -125,12 +139,17 @@ th, td {
 
 th {
     background: #2196F3;
-    color: white;
+    color: pink;
 }
 
 #message {
     margin-top: 15px;
     overflow-wrap: anywhere;
+    font-weight: bold;
+}
+
+.report-section {
+    display: none;
 }
 
 @media(max-width: 500px) {
@@ -141,6 +160,11 @@ th {
     .date-field {
         min-width: 100%;
     }
+
+    button {
+        width: 100%;
+        margin-right: 0;
+    }
 }
 </style>
 </head>
@@ -149,88 +173,107 @@ th {
 
 <div class="container">
 
-<h2>Date range to view report</h2>
+    <h2>DATE RANGE TO VIEW REPORT</h2>
 
-<div class="date-box">
+    <!-- DATE RANGE -->
 
-    <div class="date-field">
-        <label for="fromDate">FROM DATE</label>
-        <input type="date" id="fromDate" required>
+    <div class="date-box">
+
+        <div class="date-field">
+            <label for="fromDate">FROM DATE</label>
+            <input type="date" id="fromDate" required>
+        </div>
+
+        <div class="date-field">
+            <label for="toDate">TO DATE</label>
+            <input type="date" id="toDate" required>
+        </div>
+
     </div>
 
-    <div class="date-field">
-        <label for="toDate">TO DATE</label>
-        <input type="date" id="toDate" required>
+    <!-- REPORT BUTTONS -->
+
+    <button type="button"
+            id="amountButton"
+            onclick="getReport('amount')">
+        GET AMOUNT
+    </button>
+
+    <button type="button"
+            id="transactionButton"
+            onclick="getReport('transactions')">
+        GET TRANSACTIONS
+    </button>
+
+    <p id="message">
+        Please select From Date and To Date.
+    </p>
+
+    <!-- AMOUNT DETAILS ONLY -->
+
+    <div class="cards report-section" id="amountSection">
+
+        <div class="card">
+            <h3>TOTAL CASH (Rs)</h3>
+            <div class="amount" id="cash">0.00</div>
+        </div>
+
+        <div class="card">
+            <h3>TOTAL UPI (Rs)</h3>
+            <div class="amount" id="upi">0.00</div>
+        </div>
+
+        <div class="card">
+            <h3>TOTAL CHEQUE (Rs)</h3>
+            <div class="amount" id="cheque">0.00</div>
+        </div>
+
+        <div class="card">
+            <h3>GRAND TOTAL PAYMENT RECEIVED (Rs)</h3>
+            <div class="amount" id="grandTotal">0.00</div>
+        </div>
+
     </div>
 
-</div>
+    <!-- ITEM WISE TRANSACTIONS ONLY -->
 
-<button type="button" id="reportButton" onclick="getReport()">
-    GET REPORT
-</button>
+    <div class="report-section" id="transactionsSection">
 
-<p id="message">
-    Please select From Date and To Date.
-</p>
+        <h3>ITEM WISE TRANSACTIONS</h3>
 
-<div class="cards">
+        <div class="table-wrap">
 
-    <div class="card">
-        <h3>TOTAL TRANSACTIONS</h3>
-        <div class="amount" id="transactions">0</div>
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Service Type / Item</th>
+                        <th>Transactions</th>
+                        <th>Total Amount (Rs)</th>
+                    </tr>
+                </thead>
+
+                <tbody id="serviceRows">
+                    <tr>
+                        <td colspan="3">
+                            Click GET TRANSACTIONS.
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+
     </div>
-
-    <div class="card">
-        <h3>TOTAL CASH (Rs)</h3>
-        <div class="amount" id="cash">0.00</div>
-    </div>
-
-    <div class="card">
-        <h3>TOTAL UPI (Rs)</h3>
-        <div class="amount" id="upi">0.00</div>
-    </div>
-
-    <div class="card">
-        <h3>TOTAL CHEQUE (Rs)</h3>
-        <div class="amount" id="cheque">0.00</div>
-    </div>
-
-    <div class="card">
-        <h3>GRAND TOTAL PAYMENT RECEIVED (Rs)</h3>
-        <div class="amount" id="grandTotal">0.00</div>
-    </div>
-
-</div>
-
-<h3>SERVICE TYPE — ITEM WISE TRANSACTIONS</h3>
-
-<div class="table-wrap">
-
-<table>
-
-<thead>
-<tr>
-    <th>Service Type</th>
-    <th>Transactions</th>
-    <th>Total Amount (Rs)</th>
-</tr>
-</thead>
-
-<tbody id="serviceRows">
-
-<tr>
-    <td colspan="3">Select a date range to view report.</td>
-</tr>
-
-</tbody>
-
-</table>
-
-</div>
 
 </div>
 
 <script>
+
+// ======================================
+// APPS SCRIPT URL
+// ======================================
 
 const SCRIPT_URL =
 "https://script.google.com/macros/s/AKfycbwMV8c8GGu3BWw14Oeaf4qL6wD0-NDzuRvvbgccHas_tXfJt3lq2UOTHqOiXv3b_UPcrQ/exec";
@@ -240,49 +283,51 @@ let activeCallback = null;
 let reportTimeout = null;
 
 
-// ==================================================
+// ======================================
 // MESSAGE
-// ==================================================
+// ======================================
 
 function showMessage(message) {
-
     document.getElementById("message").textContent = message;
+}
+
+
+// ======================================
+// HIDE BOTH REPORT SECTIONS
+// ======================================
+
+function hideReports() {
+
+    document.getElementById("amountSection").style.display = "none";
+
+    document.getElementById("transactionsSection").style.display = "none";
 
 }
 
 
-// ==================================================
-// RESET REPORT
-// ==================================================
+// ======================================
+// RESET AMOUNT DETAILS
+// ======================================
 
-function resetReport() {
-
-    document.getElementById("transactions").textContent = "0";
+function resetAmount() {
 
     document.getElementById("cash").textContent = "0.00";
-
     document.getElementById("upi").textContent = "0.00";
-
     document.getElementById("cheque").textContent = "0.00";
-
     document.getElementById("grandTotal").textContent = "0.00";
-
-    document.getElementById("serviceRows").innerHTML =
-        '<tr><td colspan="3">No report data loaded.</td></tr>';
 
 }
 
 
-// ==================================================
-// CLEANUP REQUEST
-// ==================================================
+// ======================================
+// CLEANUP PREVIOUS REQUEST
+// ======================================
 
 function cleanupRequest() {
 
     if (reportTimeout !== null) {
 
         clearTimeout(reportTimeout);
-
         reportTimeout = null;
 
     }
@@ -290,7 +335,6 @@ function cleanupRequest() {
     if (activeCallback) {
 
         delete window[activeCallback];
-
         activeCallback = null;
 
     }
@@ -298,21 +342,22 @@ function cleanupRequest() {
     if (activeScript) {
 
         activeScript.remove();
-
         activeScript = null;
 
     }
 
-    document.getElementById("reportButton").disabled = false;
+    document.getElementById("amountButton").disabled = false;
+
+    document.getElementById("transactionButton").disabled = false;
 
 }
 
 
-// ==================================================
+// ======================================
 // GET REPORT
-// ==================================================
+// ======================================
 
-function getReport() {
+function getReport(mode) {
 
     const fromDate =
         document.getElementById("fromDate").value;
@@ -321,38 +366,49 @@ function getReport() {
         document.getElementById("toDate").value;
 
 
-    // Date validation
+    // DATE VALIDATION
 
     if (!fromDate || !toDate) {
 
         showMessage("Please select From Date and To Date.");
-
         return;
 
     }
-
 
     if (fromDate > toDate) {
 
         showMessage("From Date cannot be greater than To Date.");
+        return;
 
+    }
+
+    if (mode !== "amount" && mode !== "transactions") {
+
+        showMessage("Invalid report selection.");
         return;
 
     }
 
 
-    // Cancel previous request
+    // CANCEL PREVIOUS REQUEST
 
     cleanupRequest();
 
-    resetReport();
+    hideReports();
 
-    document.getElementById("reportButton").disabled = true;
+    document.getElementById("amountButton").disabled = true;
+
+    document.getElementById("transactionButton").disabled = true;
+
 
     showMessage(
-        "Loading report from " + fromDate + " to " + toDate + "..."
+        mode === "amount"
+        ? "Loading Amount Details..."
+        : "Loading Item Wise Transactions..."
     );
 
+
+    // CREATE CALLBACK
 
     const callbackName =
         "reportCallback_" +
@@ -360,18 +416,16 @@ function getReport() {
         "_" +
         Math.floor(Math.random() * 100000);
 
-
     activeCallback = callbackName;
 
     activeScript = document.createElement("script");
-
 
     const thisScript = activeScript;
 
     const thisCallback = callbackName;
 
 
-    // Timeout
+    // REQUEST TIMEOUT
 
     reportTimeout = setTimeout(function() {
 
@@ -380,15 +434,15 @@ function getReport() {
         cleanupRequest();
 
         showMessage(
-            "Request timed out. Check Apps Script deployment and URL."
+            "Request timed out. Check Apps Script URL and deployment."
         );
 
-    }, 20000);
+    }, 30000);
 
 
-    // ==================================================
+    // ======================================
     // JSONP CALLBACK
-    // ==================================================
+    // ======================================
 
     window[callbackName] = function(data) {
 
@@ -397,12 +451,14 @@ function getReport() {
         cleanupRequest();
 
 
+        // RESPONSE VALIDATION
+
         if (!data || data.status !== "success") {
 
             showMessage(
                 data && data.message
-                    ? "Report error: " + data.message
-                    : "Invalid response from Apps Script."
+                ? "Report Error: " + data.message
+                : "Invalid response from Apps Script."
             );
 
             return;
@@ -410,105 +466,128 @@ function getReport() {
         }
 
 
-        // Summary Cards
+        // ======================================
+        // GET AMOUNT
+        // ======================================
 
-        document.getElementById("transactions").textContent =
-            Number(data.transactions || 0);
+        if (mode === "amount") {
 
-        document.getElementById("cash").textContent =
-            Number(data.cash || 0).toFixed(2);
+            document.getElementById("cash").textContent =
+                Number(data.cash || 0).toFixed(2);
 
-        document.getElementById("upi").textContent =
-            Number(data.upi || 0).toFixed(2);
+            document.getElementById("upi").textContent =
+                Number(data.upi || 0).toFixed(2);
 
-        document.getElementById("cheque").textContent =
-            Number(data.cheque || 0).toFixed(2);
+            document.getElementById("cheque").textContent =
+                Number(data.cheque || 0).toFixed(2);
 
-        document.getElementById("grandTotal").textContent =
-            Number(data.grandTotal || 0).toFixed(2);
-
-
-        // Service Wise Report
-
-        const tbody =
-            document.getElementById("serviceRows");
-
-        tbody.replaceChildren();
+            document.getElementById("grandTotal").textContent =
+                Number(data.grandTotal || 0).toFixed(2);
 
 
-        if (
-            !Array.isArray(data.services) ||
-            data.services.length === 0
-        ) {
+            // SHOW AMOUNT SECTION ONLY
 
-            const tr = document.createElement("tr");
+            document.getElementById("amountSection").style.display = "grid";
 
-            const td = document.createElement("td");
-
-            td.colSpan = 3;
-
-            td.textContent =
-                "No records found between " +
-                fromDate +
-                " and " +
-                toDate +
-                ".";
-
-            tr.appendChild(td);
-
-            tbody.appendChild(tr);
-
-        } else {
-
-            data.services.forEach(function(item) {
-
-                const tr = document.createElement("tr");
+            document.getElementById("transactionsSection").style.display = "none";
 
 
-                const values = [
-
-                    item.serviceType || "",
-
-                    Number(item.transactions || 0),
-
-                    Number(item.totalAmount || 0).toFixed(2)
-
-                ];
-
-
-                values.forEach(function(value) {
-
-                    const td = document.createElement("td");
-
-                    td.textContent = value;
-
-                    tr.appendChild(td);
-
-                });
-
-
-                tbody.appendChild(tr);
-
-            });
+            showMessage(
+                "Amount Details Loaded Successfully. From " +
+                fromDate + " To " + toDate
+            );
 
         }
 
 
-        showMessage(
-            "Report loaded from " +
-            fromDate +
-            " to " +
-            toDate +
-            ". Total Transactions: " +
-            Number(data.transactions || 0)
-        );
+        // ======================================
+        // GET ITEM WISE TRANSACTIONS
+        // ======================================
+
+        else if (mode === "transactions") {
+
+            const tbody =
+                document.getElementById("serviceRows");
+
+            tbody.replaceChildren();
+
+
+            if (!Array.isArray(data.services) ||
+                data.services.length === 0) {
+
+                const tr = document.createElement("tr");
+
+                const td = document.createElement("td");
+
+                td.colSpan = 3;
+
+                td.textContent =
+                    "No transactions found between " +
+                    fromDate + " and " + toDate + ".";
+
+                tr.appendChild(td);
+
+                tbody.appendChild(tr);
+
+            }
+
+            else {
+
+                data.services.forEach(function(item) {
+
+                    const tr = document.createElement("tr");
+
+                    const values = [
+
+                        item.serviceType || "",
+
+                        Number(item.transactions || 0),
+
+                        Number(item.totalAmount || 0).toFixed(2)
+
+                    ];
+
+
+                    values.forEach(function(value) {
+
+                        const td = document.createElement("td");
+
+                        td.textContent = value;
+
+                        tr.appendChild(td);
+
+                    });
+
+
+                    tbody.appendChild(tr);
+
+                });
+
+            }
+
+
+            // SHOW TRANSACTIONS SECTION ONLY
+
+            document.getElementById("transactionsSection").style.display = "block";
+
+            document.getElementById("amountSection").style.display = "none";
+
+
+            showMessage(
+                "Item Wise Transactions Loaded Successfully. " +
+                "Total Transactions: " +
+                Number(data.transactions || 0) +
+                " | From " + fromDate + " To " + toDate
+            );
+
+        }
 
     };
 
 
-    // ==================================================
+    // ======================================
     // SCRIPT ERROR
-    // ==================================================
+    // ======================================
 
     thisScript.onerror = function() {
 
@@ -517,15 +596,16 @@ function getReport() {
         cleanupRequest();
 
         showMessage(
-            "Failed to load report. Verify the /exec URL, deployment access and Apps Script errors."
+            "Failed to connect to Apps Script. " +
+            "Check Web App URL and deployment access."
         );
 
     };
 
 
-    // ==================================================
+    // ======================================
     // JSONP REQUEST
-    // ==================================================
+    // ======================================
 
     thisScript.src =
         SCRIPT_URL +
